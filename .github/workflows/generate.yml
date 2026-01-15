@@ -21,15 +21,33 @@ jobs:
       - name: Install dependencies
         run: pip install feedparser requests gtts
       
-      - name: Generate podcast
+      - name: Parse news
+        run: python scripts/rss_parser.py
+      
+      - name: Generate audio files
         run: |
-          python scripts/rss_parser.py
           python -c "
           from gtts import gTTS
-          text = open('data/script.txt', 'r', encoding='utf-8').read()
-          tts = gTTS(text, lang='ru')
-          tts.save('podcast.mp3')
-          print('Done!')
+          import os
+          
+          categories = ['news', 'science', 'tech', 'culture', 'sport']
+          
+          for cat in categories:
+              script_file = f'data/script_{cat}.txt'
+              if os.path.exists(script_file):
+                  print(f'Generating {cat}...')
+                  text = open(script_file, 'r', encoding='utf-8').read()
+                  tts = gTTS(text, lang='ru')
+                  tts.save(f'data/podcast_{cat}.mp3')
+                  print(f'Done: podcast_{cat}.mp3')
+          
+          # Main podcast
+          if os.path.exists('data/script.txt'):
+              print('Generating main...')
+              text = open('data/script.txt', 'r', encoding='utf-8').read()
+              tts = gTTS(text, lang='ru')
+              tts.save('podcast.mp3')
+              print('Done: podcast.mp3')
           "
       
       - name: Commit and push
@@ -37,5 +55,5 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "New podcast" || exit 0
+          git commit -m "New podcasts" || exit 0
           git push

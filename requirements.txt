@@ -1,0 +1,11 @@
+# FlashCast — Зависимости Python
+# Установка: pip install -r requirements.txt
+
+# Парсинг RSS-лент
+feedparser>=6.0.0
+
+# HTTP-запросы
+requests>=2.28.0
+
+# Озвучка (Edge TTS от Microsoft)
+edge-tts>=6.1.0

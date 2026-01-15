@@ -1,4 +1,4 @@
-name: Создать подкаст
+name: Generate Podcast
 
 on:
   schedule:
@@ -37,5 +37,5 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "🎙️ Новый подкаст" || exit 0
+          git commit -m "New podcast" || exit 0
           git push

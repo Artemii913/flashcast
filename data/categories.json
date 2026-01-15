@@ -1,0 +1,22 @@
+{
+  "news": {
+    "name": "Новости",
+    "news_count": 6,
+    "script_file": "data/script_news.txt"
+  },
+  "science": {
+    "name": "Наука",
+    "news_count": 4,
+    "script_file": "data/script_science.txt"
+  },
+  "tech": {
+    "name": "Технологии",
+    "news_count": 4,
+    "script_file": "data/script_tech.txt"
+  },
+  "sport": {
+    "name": "Спорт",
+    "news_count": 4,
+    "script_file": "data/script_sport.txt"
+  }
+}

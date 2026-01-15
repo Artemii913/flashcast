@@ -41,7 +41,6 @@ jobs:
                   tts.save(f'data/podcast_{cat}.mp3')
                   print(f'Done: podcast_{cat}.mp3')
           
-          # Main podcast
           if os.path.exists('data/script.txt'):
               print('Generating main...')
               text = open('data/script.txt', 'r', encoding='utf-8').read()

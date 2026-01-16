@@ -2,107 +2,57 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FlashCast — AI Подкасты</title>
-    
-    <!-- 
-    ============================================
-    FlashCast — Минимальный сайт для подкастов
-    ============================================
-    Версия: 2.0
-    Изменения:
-    - Убрана поисковая строка
-    - Добавлены быстрые фильтры по категориям
-    - Улучшена мобильная адаптация
-    - Исправлены битые ссылки на картинки
-    ============================================
-    -->
-    
-    <!-- Шрифты: Montserrat для заголовков, Source Sans 3 для текста -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ============================================
-           CSS ПЕРЕМЕННЫЕ — Цветовая палитра
-           ============================================ */
         :root {
-            /* Основные цвета тёмной темы */
             --bg-primary: #0a0a0f;
             --bg-secondary: #12121a;
             --bg-tertiary: #1a1a25;
-            
-            /* Акцентные цвета — оранжево-красный градиент */
+            --bg-player: #0d0d14;
             --accent-primary: #ff6b35;
             --accent-secondary: #ff8c42;
+            --accent-yellow: #ffcc00;
             --accent-glow: rgba(255, 107, 53, 0.3);
-            
-            /* Текст */
             --text-primary: #ffffff;
             --text-secondary: #a0a0b0;
             --text-muted: #606070;
-            
-            /* Отступы */
             --spacing-xs: 0.5rem;
             --spacing-sm: 1rem;
             --spacing-md: 1.5rem;
             --spacing-lg: 2rem;
             --spacing-xl: 3rem;
-            
-            /* Скругления */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
+            --radius-xl: 24px;
             --radius-full: 50%;
-            
-            /* Анимации */
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
         }
-
-        /* ============================================
-           СБРОС И БАЗОВЫЕ СТИЛИ
-           ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Source Sans 3', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
-            padding-bottom: 120px;
+            overflow-x: hidden;
         }
-
-        /* Фоновый градиент для атмосферы */
+        body.player-open { overflow: hidden; }
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 50vh;
-            background: radial-gradient(
-                ellipse at top,
-                rgba(255, 107, 53, 0.08) 0%,
-                transparent 70%
-            );
+            background: radial-gradient(ellipse at top, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
-
-        /* ============================================
-           ШАПКА (HEADER)
-           ============================================ */
         .header {
             position: sticky;
             top: 0;
@@ -112,7 +62,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: var(--spacing-md) var(--spacing-lg);
         }
-
         .header__container {
             max-width: 1200px;
             margin: 0 auto;
@@ -120,8 +69,6 @@
             align-items: center;
             justify-content: center;
         }
-
-        /* Логотип */
         .logo {
             display: flex;
             align-items: center;
@@ -129,10 +76,8 @@
             text-decoration: none;
             color: var(--text-primary);
         }
-
         .logo__icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border-radius: var(--radius-md);
             display: flex;
@@ -141,21 +86,13 @@
             font-size: 1.2rem;
             box-shadow: 0 4px 20px var(--accent-glow);
         }
-
         .logo__text {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
             font-size: 1.5rem;
             letter-spacing: -0.5px;
         }
-
-        .logo__text span {
-            color: var(--accent-primary);
-        }
-
-        /* ============================================
-           ОСНОВНОЙ КОНТЕНТ
-           ============================================ */
+        .logo__text span { color: var(--accent-primary); }
         .main {
             max-width: 1200px;
             margin: 0 auto;
@@ -163,8 +100,6 @@
             position: relative;
             z-index: 1;
         }
-
-        /* Заголовок секции */
         .section__title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -174,26 +109,18 @@
             align-items: center;
             gap: var(--spacing-sm);
         }
-
         .section__title::before {
             content: '';
-            width: 4px;
-            height: 24px;
+            width: 4px; height: 24px;
             background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
             border-radius: 2px;
         }
-
-        /* ============================================
-           БЫСТРЫЕ ФИЛЬТРЫ ПО КАТЕГОРИЯМ
-           ============================================ */
         .filters {
             display: flex;
             gap: var(--spacing-xs);
             margin-bottom: var(--spacing-lg);
             flex-wrap: wrap;
-            padding-bottom: var(--spacing-sm);
         }
-
         .filter-btn {
             padding: 8px 16px;
             background: var(--bg-secondary);
@@ -207,30 +134,22 @@
             transition: var(--transition-normal);
             white-space: nowrap;
         }
-
         .filter-btn:hover {
             border-color: var(--accent-primary);
             color: var(--text-primary);
             background: var(--bg-tertiary);
         }
-
         .filter-btn.active {
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border-color: transparent;
             color: white;
             box-shadow: 0 4px 15px var(--accent-glow);
         }
-
-        /* ============================================
-           СЕТКА КАРТОЧЕК ПОДКАСТОВ
-           ============================================ */
         .podcasts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: var(--spacing-md);
         }
-
-        /* Карточка подкаста */
         .podcast-card {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
@@ -241,57 +160,42 @@
             animation: fadeInUp 0.5s ease forwards;
             opacity: 0;
         }
-
-        .podcast-card:nth-child(1) { animation-delay: 0.1s; }
-        .podcast-card:nth-child(2) { animation-delay: 0.15s; }
-        .podcast-card:nth-child(3) { animation-delay: 0.2s; }
-        .podcast-card:nth-child(4) { animation-delay: 0.25s; }
-        .podcast-card:nth-child(5) { animation-delay: 0.3s; }
-        .podcast-card:nth-child(6) { animation-delay: 0.35s; }
-
+        .podcast-card:nth-child(1) { animation-delay: 0.05s; }
+        .podcast-card:nth-child(2) { animation-delay: 0.1s; }
+        .podcast-card:nth-child(3) { animation-delay: 0.15s; }
+        .podcast-card:nth-child(4) { animation-delay: 0.2s; }
+        .podcast-card:nth-child(5) { animation-delay: 0.25s; }
+        .podcast-card:nth-child(6) { animation-delay: 0.3s; }
+        .podcast-card:nth-child(7) { animation-delay: 0.35s; }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .podcast-card:hover {
             transform: translateY(-4px);
             border-color: rgba(255, 107, 53, 0.3);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
-
-        /* Обложка подкаста */
+        .podcast-card--featured {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+        .podcast-card--featured .podcast-card__tag {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
         .podcast-card__cover {
             position: relative;
             aspect-ratio: 16 / 9;
             overflow: hidden;
             background: var(--bg-tertiary);
         }
-
         .podcast-card__image {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover;
             transition: var(--transition-normal);
         }
-
-        /* Плейсхолдер для картинок при загрузке */
-        .podcast-card__image[src=""],
-        .podcast-card__image:not([src]) {
-            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
-        }
-
-        .podcast-card:hover .podcast-card__image {
-            transform: scale(1.05);
-        }
-
-        /* Категория (тег) */
+        .podcast-card:hover .podcast-card__image { transform: scale(1.05); }
         .podcast-card__tag {
             position: absolute;
             top: var(--spacing-sm);
@@ -306,8 +210,6 @@
             letter-spacing: 0.5px;
             color: var(--accent-secondary);
         }
-
-        /* Длительность */
         .podcast-card__duration {
             position: absolute;
             bottom: var(--spacing-sm);
@@ -318,15 +220,11 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
-
-        /* Кнопка воспроизведения на обложке */
         .podcast-card__play {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
-            width: 56px;
-            height: 56px;
+            width: 56px; height: 56px;
             background: var(--accent-primary);
             border-radius: var(--radius-full);
             display: flex;
@@ -336,21 +234,12 @@
             transition: var(--transition-normal);
             box-shadow: 0 4px 20px var(--accent-glow);
         }
-
         .podcast-card:hover .podcast-card__play {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
-
-        .podcast-card__play svg {
-            margin-left: 3px;
-        }
-
-        /* Информация о подкасте */
-        .podcast-card__info {
-            padding: var(--spacing-md);
-        }
-
+        .podcast-card__play svg { margin-left: 3px; }
+        .podcast-card__info { padding: var(--spacing-md); }
         .podcast-card__title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
@@ -362,7 +251,6 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .podcast-card__meta {
             display: flex;
             align-items: center;
@@ -370,86 +258,237 @@
             color: var(--text-secondary);
             font-size: 0.85rem;
         }
-
-        .podcast-card__date {
+        .podcast-card__date { display: flex; align-items: center; gap: 4px; }
+        /* Полноэкранный плеер */
+        .fullscreen-player {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-player);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        .fullscreen-player.active { transform: translateY(0); }
+        .player-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center top, rgba(255, 107, 53, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .player-header {
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: space-between;
+            padding: var(--spacing-md) var(--spacing-lg);
+            position: relative;
+            z-index: 1;
         }
-
-        /* ============================================
-           ФИКСИРОВАННЫЙ ПЛЕЕР ВНИЗУ
-           ============================================ */
-        .player {
+        .player-header__btn {
+            width: 44px; height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+        }
+        .player-header__btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .player-header__title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        .player-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .player-cover {
+            width: 100%;
+            max-width: 320px;
+            aspect-ratio: 1;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-bottom: var(--spacing-xl);
+        }
+        .player-cover__image { width: 100%; height: 100%; object-fit: cover; }
+        .player-track-info {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: var(--spacing-lg);
+        }
+        .player-track-info__title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            line-height: 1.4;
+            margin-bottom: var(--spacing-xs);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .player-track-info__category { color: var(--text-secondary); font-size: 1rem; }
+        .player-progress { width: 100%; max-width: 400px; margin-bottom: var(--spacing-lg); }
+        .player-progress__bar {
+            width: 100%; height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: var(--spacing-xs);
+        }
+        .player-progress__fill {
+            height: 100%;
+            background: var(--text-primary);
+            border-radius: 2px;
+            width: 0%;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+        .player-progress__fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px; height: 12px;
+            background: var(--text-primary);
+            border-radius: var(--radius-full);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .player-progress__bar:hover .player-progress__fill::after { opacity: 1; }
+        .player-progress__time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .player-controls__btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-full);
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-controls__btn:hover { color: var(--accent-primary); transform: scale(1.1); }
+        .player-controls__btn--main {
+            width: 72px; height: 72px;
+            background: var(--accent-yellow);
+            color: var(--bg-primary);
+            border-radius: var(--radius-full);
+            margin: 0 var(--spacing-sm);
+        }
+        .player-controls__btn--main:hover {
+            background: #ffe033;
+            transform: scale(1.05);
+            color: var(--bg-primary);
+        }
+        .player-controls__btn--main svg { margin-left: 3px; }
+        .player-controls__btn--main.playing svg { margin-left: 0; }
+        .player-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-lg);
+        }
+        .player-actions__btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.85rem;
+        }
+        .player-actions__btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .player-actions__btn.active {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        /* Мини-плеер */
+        .mini-player {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             background: linear-gradient(to top, rgba(10, 10, 15, 0.98), rgba(18, 18, 26, 0.95));
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: var(--spacing-md) var(--spacing-lg);
+            padding: var(--spacing-sm) var(--spacing-lg);
             z-index: 1000;
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
         }
-
-        .player.active {
-            transform: translateY(0);
-        }
-
-        .player__container {
+        .mini-player.active { transform: translateY(0); }
+        .mini-player__container {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
         }
-
-        /* Информация о текущем треке */
-        .player__track {
+        .mini-player__track {
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
-            flex: 0 0 250px;
+            flex: 1;
             min-width: 0;
         }
-
-        .player__cover {
-            width: 48px;
-            height: 48px;
+        .mini-player__cover {
+            width: 48px; height: 48px;
             border-radius: var(--radius-sm);
             object-fit: cover;
             flex-shrink: 0;
         }
-
-        .player__info {
-            overflow: hidden;
-            min-width: 0;
-        }
-
-        .player__title {
+        .mini-player__info { overflow: hidden; min-width: 0; }
+        .mini-player__title {
             font-weight: 600;
             font-size: 0.9rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .player__category {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        /* Управление воспроизведением */
-        .player__controls {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            flex-shrink: 0;
-        }
-
-        .player__btn {
+        .mini-player__category { color: var(--text-secondary); font-size: 0.8rem; }
+        .mini-player__controls { display: flex; align-items: center; gap: var(--spacing-xs); }
+        .mini-player__btn {
             background: none;
             border: none;
             color: var(--text-primary);
@@ -461,278 +500,85 @@
             align-items: center;
             justify-content: center;
         }
-
-        .player__btn:hover {
-            color: var(--accent-primary);
-            background: rgba(255, 107, 53, 0.1);
+        .mini-player__btn:hover { color: var(--accent-primary); }
+        .mini-player__btn--main {
+            width: 44px; height: 44px;
+            background: var(--accent-yellow);
+            color: var(--bg-primary);
         }
-
-        .player__btn--main {
-            width: 48px;
-            height: 48px;
-            background: var(--accent-primary);
-            color: white;
+        .mini-player__btn--main:hover { background: #ffe033; color: var(--bg-primary); }
+        .mini-player__progress {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
         }
-
-        .player__btn--main:hover {
-            background: var(--accent-secondary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* Прогресс-бар */
-        .player__progress {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            min-width: 0;
-        }
-
-        .player__time {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            min-width: 40px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .player__bar {
-            flex: 1;
-            height: 4px;
-            background: var(--bg-tertiary);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            min-width: 50px;
-        }
-
-        .player__bar-fill {
+        .mini-player__progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            background: var(--accent-primary);
             width: 0%;
-            border-radius: 2px;
             transition: width 0.1s linear;
         }
-
-        .player__bar:hover .player__bar-fill {
-            background: var(--accent-secondary);
-        }
-
-        /* Громкость */
-        .player__volume {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            flex: 0 0 120px;
-        }
-
-        .player__volume-slider {
-            width: 80px;
-            height: 4px;
-            -webkit-appearance: none;
-            background: var(--bg-tertiary);
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .player__volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--accent-primary);
-            border-radius: var(--radius-full);
-            cursor: pointer;
-        }
-
-        /* ============================================
-           АДАПТИВНОСТЬ (RESPONSIVE)
-           ============================================ */
-        
-        /* Планшеты */
-        @media (max-width: 1024px) {
-            .podcasts-grid {
-                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            }
-            
-            .player__track {
-                flex: 0 0 200px;
-            }
-        }
-
-        /* Мобильные устройства */
+        /* Адаптивность */
         @media (max-width: 768px) {
-            :root {
-                --spacing-lg: 1.5rem;
-                --spacing-xl: 2rem;
-            }
-
-            .header {
-                padding: var(--spacing-sm) var(--spacing-md);
-            }
-
-            .logo__text {
-                font-size: 1.3rem;
-            }
-
-            .main {
-                padding: var(--spacing-lg) var(--spacing-md);
-            }
-
-            .section__title {
-                font-size: 1.25rem;
-            }
-
-            /* Фильтры — горизонтальный скролл */
+            :root { --spacing-lg: 1.5rem; --spacing-xl: 2rem; }
+            .header { padding: var(--spacing-sm) var(--spacing-md); }
+            .logo__text { font-size: 1.3rem; }
+            .main { padding: var(--spacing-lg) var(--spacing-md); }
+            .section__title { font-size: 1.25rem; }
             .filters {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                margin-left: calc(-1 * var(--spacing-md));
-                margin-right: calc(-1 * var(--spacing-md));
-                padding-left: var(--spacing-md);
-                padding-right: var(--spacing-md);
+                margin: 0 calc(-1 * var(--spacing-md)) var(--spacing-lg);
+                padding: 0 var(--spacing-md);
             }
-
-            .filters::-webkit-scrollbar {
-                display: none;
-            }
-
-            .filter-btn {
-                padding: 6px 14px;
-                font-size: 0.85rem;
-            }
-
-            /* Карточки — 2 колонки на средних экранах */
-            .podcasts-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-sm);
-            }
-
-            .podcast-card__info {
-                padding: var(--spacing-sm);
-            }
-
-            .podcast-card__title {
-                font-size: 0.9rem;
-            }
-
-            .podcast-card__meta {
-                font-size: 0.75rem;
-            }
-
-            /* Плеер — компактная версия */
-            .player {
-                padding: var(--spacing-sm) var(--spacing-md);
-            }
-
-            .player__container {
-                flex-wrap: wrap;
-                gap: var(--spacing-sm);
-            }
-
-            .player__track {
-                flex: 1 1 auto;
-                order: 1;
-                min-width: 0;
-            }
-
-            .player__controls {
-                order: 2;
-            }
-
-            .player__progress {
-                order: 3;
-                flex: 1 1 100%;
-            }
-
-            .player__volume {
-                display: none;
-            }
-
-            .player__cover {
-                width: 40px;
-                height: 40px;
-            }
-
-            .player__title {
-                font-size: 0.85rem;
-            }
-
-            .player__btn--main {
-                width: 44px;
-                height: 44px;
-            }
+            .filters::-webkit-scrollbar { display: none; }
+            .filter-btn { padding: 6px 14px; font-size: 0.85rem; }
+            .podcasts-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
+            .podcast-card__info { padding: var(--spacing-sm); }
+            .podcast-card__title { font-size: 0.9rem; }
+            .podcast-card__meta { font-size: 0.75rem; }
+            .player-header { padding: var(--spacing-sm) var(--spacing-md); }
+            .player-content { padding: var(--spacing-md); }
+            .player-cover { max-width: 280px; margin-bottom: var(--spacing-lg); }
+            .player-track-info__title { font-size: 1.1rem; }
+            .player-controls__btn--main { width: 64px; height: 64px; }
+            .mini-player { padding: var(--spacing-sm) var(--spacing-md); }
+            .mini-player__cover { width: 40px; height: 40px; }
+            .mini-player__title { font-size: 0.85rem; }
+            .mini-player__btn--main { width: 40px; height: 40px; }
         }
-
-        /* Маленькие мобильные */
         @media (max-width: 480px) {
-            /* Карточки — 1 колонка */
-            .podcasts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .podcast-card__cover {
-                aspect-ratio: 2 / 1;
-            }
-
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
+            .podcasts-grid { grid-template-columns: 1fr; }
+            .podcast-card__cover { aspect-ratio: 2 / 1; }
+            .filter-btn { padding: 6px 12px; font-size: 0.8rem; }
+            .player-cover { max-width: 240px; }
+            .player-controls { gap: var(--spacing-sm); }
+            .player-controls__btn--main { width: 56px; height: 56px; }
+            .player-actions { flex-wrap: wrap; gap: var(--spacing-sm); }
+            .player-actions__btn { padding: var(--spacing-xs) var(--spacing-sm); font-size: 0.8rem; }
         }
-
-        /* ============================================
-           СОСТОЯНИЕ "НЕТ РЕЗУЛЬТАТОВ"
-           ============================================ */
-        .no-results {
-            text-align: center;
-            padding: var(--spacing-xl);
-            color: var(--text-secondary);
-            display: none;
-        }
-
-        .no-results.visible {
-            display: block;
-        }
-
-        .no-results__icon {
-            font-size: 3rem;
-            margin-bottom: var(--spacing-md);
-            opacity: 0.5;
-        }
-
-        .no-results__text {
-            font-size: 1.1rem;
-        }
+        .no-results { text-align: center; padding: var(--spacing-xl); color: var(--text-secondary); display: none; }
+        .no-results.visible { display: block; }
+        .no-results__icon { font-size: 3rem; margin-bottom: var(--spacing-md); opacity: 0.5; }
+        .no-results__text { font-size: 1.1rem; }
     </style>
 </head>
 <body>
-    <!-- ============================================
-         ШАПКА САЙТА
-         ============================================ -->
     <header class="header">
         <div class="header__container">
-            <!-- Логотип -->
             <a href="#" class="logo">
                 <div class="logo__icon">🎙️</div>
                 <div class="logo__text">Flash<span>Cast</span></div>
             </a>
         </div>
     </header>
-
-    <!-- ============================================
-         ОСНОВНОЙ КОНТЕНТ
-         ============================================ -->
     <main class="main">
-        <!-- Заголовок секции -->
         <h2 class="section__title">Популярные выпуски</h2>
-        
-        <!-- Быстрые фильтры по категориям -->
         <div class="filters" id="filters">
-            <button class="filter-btn active" data-category="all">Все новости</button>
+            <button class="filter-btn active" data-category="all">Все</button>
             <button class="filter-btn" data-category="Технологии">Технологии</button>
             <button class="filter-btn" data-category="Экономика">Экономика</button>
             <button class="filter-btn" data-category="Спорт">Спорт</button>
@@ -740,429 +586,201 @@
             <button class="filter-btn" data-category="Наука">Наука</button>
             <button class="filter-btn" data-category="Культура">Культура</button>
         </div>
-        
-        <!-- Сетка карточек подкастов -->
-        <div class="podcasts-grid" id="podcastsGrid">
-            <!-- Карточки генерируются через JavaScript -->
-        </div>
-
-        <!-- Сообщение "Ничего не найдено" -->
+        <div class="podcasts-grid" id="podcastsGrid"></div>
         <div class="no-results" id="noResults">
             <div class="no-results__icon">📭</div>
             <p class="no-results__text">Нет подкастов в этой категории.</p>
         </div>
     </main>
-
-    <!-- ============================================
-         АУДИОПЛЕЕР (фиксированный внизу)
-         ============================================ -->
-    <div class="player" id="player">
-        <div class="player__container">
-            <!-- Информация о треке -->
-            <div class="player__track">
-                <img src="" alt="" class="player__cover" id="playerCover">
-                <div class="player__info">
-                    <div class="player__title" id="playerTitle">—</div>
-                    <div class="player__category" id="playerCategory">—</div>
+    <div class="mini-player" id="miniPlayer">
+        <div class="mini-player__progress"><div class="mini-player__progress-fill" id="miniProgressFill"></div></div>
+        <div class="mini-player__container">
+            <div class="mini-player__track">
+                <img src="" alt="" class="mini-player__cover" id="miniPlayerCover">
+                <div class="mini-player__info">
+                    <div class="mini-player__title" id="miniPlayerTitle">—</div>
+                    <div class="mini-player__category" id="miniPlayerCategory">—</div>
                 </div>
             </div>
-
-            <!-- Кнопки управления -->
-            <div class="player__controls">
-                <!-- Назад 10 сек -->
-                <button class="player__btn" id="btnBackward" title="Назад 10 сек">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 17a1 1 0 1 0 2 0v-4l3.2 2.4a1 1 0 0 0 1.2-1.6L14 12l3.4-2.8a1 1 0 0 0-1.2-1.6L13 10V6a1 1 0 1 0-2 0v4L7.8 7.6a1 1 0 0 0-1.2 1.6L10 12l-3.4 2.8a1 1 0 1 0 1.2 1.6L11 14z"/>
-                        <path d="M3 12a9 9 0 1 0 9-9"/>
-                        <path d="M3 6v3h3"/>
-                    </svg>
+            <div class="mini-player__controls">
+                <button class="mini-player__btn mini-player__btn--main" id="miniPlayPause" onclick="event.stopPropagation()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                 </button>
-
-                <!-- Play / Pause -->
-                <button class="player__btn player__btn--main" id="btnPlayPause" title="Воспроизвести">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="iconPlay">
-                        <polygon points="5,3 19,12 5,21"/>
-                    </svg>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="iconPause" style="display:none;">
-                        <rect x="6" y="4" width="4" height="16"/>
-                        <rect x="14" y="4" width="4" height="16"/>
-                    </svg>
-                </button>
-
-                <!-- Вперёд 10 сек -->
-                <button class="player__btn" id="btnForward" title="Вперёд 10 сек">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 17a1 1 0 1 1-2 0v-4l-3.2 2.4a1 1 0 0 1-1.2-1.6L10 12 6.6 9.2a1 1 0 0 1 1.2-1.6L11 10V6a1 1 0 1 1 2 0v4l3.2-2.4a1 1 0 0 1 1.2 1.6L14 12l3.4 2.8a1 1 0 0 1-1.2 1.6L13 14z"/>
-                        <path d="M21 12a9 9 0 1 1-9-9"/>
-                        <path d="M21 3v3h-3"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Прогресс -->
-            <div class="player__progress">
-                <span class="player__time" id="currentTime">0:00</span>
-                <div class="player__bar" id="progressBar">
-                    <div class="player__bar-fill" id="progressFill"></div>
-                </div>
-                <span class="player__time" id="totalTime">0:00</span>
-            </div>
-
-            <!-- Громкость -->
-            <div class="player__volume">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                </svg>
-                <input type="range" class="player__volume-slider" id="volumeSlider" min="0" max="100" value="80">
             </div>
         </div>
     </div>
-
-    <!-- Скрытый audio элемент -->
+    <div class="fullscreen-player" id="fullscreenPlayer">
+        <div class="player-bg"></div>
+        <div class="player-header">
+            <button class="player-header__btn" id="closePlayer" title="Закрыть">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <span class="player-header__title">Сейчас играет</span>
+            <button class="player-header__btn" id="playlistBtn" title="Плейлист">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+            </button>
+        </div>
+        <div class="player-content">
+            <div class="player-cover"><img src="" alt="" class="player-cover__image" id="playerCoverImage"></div>
+            <div class="player-track-info">
+                <h2 class="player-track-info__title" id="playerTrackTitle">—</h2>
+                <p class="player-track-info__category" id="playerTrackCategory">—</p>
+            </div>
+            <div class="player-progress">
+                <div class="player-progress__bar" id="playerProgressBar"><div class="player-progress__fill" id="playerProgressFill"></div></div>
+                <div class="player-progress__time"><span id="playerCurrentTime">0:00</span><span id="playerTotalTime">0:00</span></div>
+            </div>
+            <div class="player-controls">
+                <button class="player-controls__btn" id="btnPrev" title="Предыдущий">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+                </button>
+                <button class="player-controls__btn player-controls__btn--main" id="btnMainPlayPause" title="Воспроизвести">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                </button>
+                <button class="player-controls__btn" id="btnNext" title="Следующий">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+            </div>
+            <div class="player-actions">
+                <button class="player-actions__btn" id="btnRepeat" title="Повтор">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                </button>
+                <button class="player-actions__btn" id="btnDownload" title="Скачать">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
     <audio id="audioElement"></audio>
-
-    <!-- ============================================
-         JAVASCRIPT — Логика приложения
-         ============================================ -->
     <script>
-        /**
-         * ============================================
-         * ДАННЫЕ — Демо подкасты
-         * ============================================
-         */
         const podcastsData = [
-            {
-                id: 1,
-                title: "Главные новости технологий за неделю",
-                category: "Технологии",
-                date: "15 янв 2026",
-                duration: "12:34",
-                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=225&fit=crop",
-                audio: "data/podcast_tech.mp3"
-            },
-            {
-                id: 2,
-                title: "Обзор экономических событий: курсы валют и биржи",
-                category: "Экономика",
-                date: "14 янв 2026",
-                duration: "8:45",
-                image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=225&fit=crop",
-                audio: "data/podcast_news.mp3"
-            },
-            {
-                id: 3,
-                title: "Спорт: итоги матчей и турнирные таблицы",
-                category: "Спорт",
-                date: "14 янв 2026",
-                duration: "15:20",
-                // ИСПРАВЛЕНО: была битая ссылка
-                image: "https://images.unsplash.com/photo-1461896836934-428b4e24b0fa?w=400&h=225&fit=crop",
-                audio: "data/podcast_sport.mp3"
-            },
-            {
-                id: 4,
-                title: "Политика: главные заявления и решения",
-                category: "Политика",
-                date: "13 янв 2026",
-                duration: "10:15",
-                image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400&h=225&fit=crop",
-                audio: "data/podcast_news.mp3"
-            },
-            {
-                id: 5,
-                title: "Наука: открытия и исследования недели",
-                category: "Наука",
-                date: "12 янв 2026",
-                duration: "14:30",
-                image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=225&fit=crop",
-                audio: "data/podcast_science.mp3"
-            },
-            {
-                id: 6,
-                title: "Культура: премьеры, выставки и события",
-                category: "Культура",
-                date: "11 янв 2026",
-                duration: "11:50",
-                image: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400&h=225&fit=crop",
-                audio: "data/podcast_culture.mp3"
-            }
+            { id: 0, title: "Все новости дня — полный дайджест", category: "Все новости", date: "16 янв 2026", duration: "45:00", image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop", audio: "data/podcast_all.mp3", featured: true },
+            { id: 1, title: "Главные новости технологий за неделю", category: "Технологии", date: "15 янв 2026", duration: "12:34", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop", audio: "data/podcast_tech.mp3" },
+            { id: 2, title: "Обзор экономических событий: курсы валют и биржи", category: "Экономика", date: "14 янв 2026", duration: "8:45", image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=400&fit=crop", audio: "data/podcast_economy.mp3" },
+            { id: 3, title: "Спорт: итоги матчей и турнирные таблицы", category: "Спорт", date: "14 янв 2026", duration: "15:20", image: "https://images.unsplash.com/photo-1461896836934-428b4e24b0fa?w=400&h=400&fit=crop", audio: "data/podcast_sport.mp3" },
+            { id: 4, title: "Политика: главные заявления и решения", category: "Политика", date: "13 янв 2026", duration: "10:15", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400&h=400&fit=crop", audio: "data/podcast_politics.mp3" },
+            { id: 5, title: "Наука: открытия и исследования недели", category: "Наука", date: "12 янв 2026", duration: "14:30", image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop", audio: "data/podcast_science.mp3" },
+            { id: 6, title: "Культура: премьеры, выставки и события", category: "Культура", date: "11 янв 2026", duration: "11:50", image: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400&h=400&fit=crop", audio: "data/podcast_culture.mp3" }
         ];
 
-        /**
-         * ============================================
-         * DOM ЭЛЕМЕНТЫ
-         * ============================================
-         */
-        const elements = {
-            // Контейнеры
+        const dom = {
             podcastsGrid: document.getElementById('podcastsGrid'),
             noResults: document.getElementById('noResults'),
             filters: document.getElementById('filters'),
-            
-            // Плеер
-            player: document.getElementById('player'),
-            playerCover: document.getElementById('playerCover'),
-            playerTitle: document.getElementById('playerTitle'),
-            playerCategory: document.getElementById('playerCategory'),
-            audioElement: document.getElementById('audioElement'),
-            
-            // Управление
-            btnPlayPause: document.getElementById('btnPlayPause'),
-            btnBackward: document.getElementById('btnBackward'),
-            btnForward: document.getElementById('btnForward'),
-            iconPlay: document.getElementById('iconPlay'),
-            iconPause: document.getElementById('iconPause'),
-            
-            // Прогресс
-            progressBar: document.getElementById('progressBar'),
-            progressFill: document.getElementById('progressFill'),
-            currentTime: document.getElementById('currentTime'),
-            totalTime: document.getElementById('totalTime'),
-            
-            // Громкость
-            volumeSlider: document.getElementById('volumeSlider')
+            miniPlayer: document.getElementById('miniPlayer'),
+            miniPlayerCover: document.getElementById('miniPlayerCover'),
+            miniPlayerTitle: document.getElementById('miniPlayerTitle'),
+            miniPlayerCategory: document.getElementById('miniPlayerCategory'),
+            miniPlayPause: document.getElementById('miniPlayPause'),
+            miniProgressFill: document.getElementById('miniProgressFill'),
+            fullscreenPlayer: document.getElementById('fullscreenPlayer'),
+            closePlayer: document.getElementById('closePlayer'),
+            playerCoverImage: document.getElementById('playerCoverImage'),
+            playerTrackTitle: document.getElementById('playerTrackTitle'),
+            playerTrackCategory: document.getElementById('playerTrackCategory'),
+            playerProgressBar: document.getElementById('playerProgressBar'),
+            playerProgressFill: document.getElementById('playerProgressFill'),
+            playerCurrentTime: document.getElementById('playerCurrentTime'),
+            playerTotalTime: document.getElementById('playerTotalTime'),
+            btnPrev: document.getElementById('btnPrev'),
+            btnNext: document.getElementById('btnNext'),
+            btnMainPlayPause: document.getElementById('btnMainPlayPause'),
+            btnRepeat: document.getElementById('btnRepeat'),
+            btnDownload: document.getElementById('btnDownload'),
+            audio: document.getElementById('audioElement')
         };
 
-        /**
-         * ============================================
-         * СОСТОЯНИЕ ПРИЛОЖЕНИЯ
-         * ============================================
-         */
-        let state = {
-            currentPodcast: null,
-            isPlaying: false,
-            volume: 0.8,
-            activeFilter: 'all'  // Текущий фильтр
-        };
+        let state = { currentPodcast: null, currentIndex: -1, isPlaying: false, isRepeat: false, volume: 0.8, activeFilter: 'all' };
 
-        /**
-         * ============================================
-         * ФУНКЦИИ РЕНДЕРИНГА
-         * ============================================
-         */
+        function formatTime(s) { if (isNaN(s)) return '0:00'; return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
 
-        /**
-         * Создаёт HTML карточки подкаста
-         */
-        function createPodcastCard(podcast) {
-            return `
-                <article class="podcast-card" data-id="${podcast.id}">
-                    <div class="podcast-card__cover">
-                        <img 
-                            src="${podcast.image}" 
-                            alt="${podcast.title}" 
-                            class="podcast-card__image"
-                            loading="lazy"
-                            onerror="this.src='https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=400&h=225&fit=crop'"
-                        >
-                        <span class="podcast-card__tag">${podcast.category}</span>
-                        <span class="podcast-card__duration">${podcast.duration}</span>
-                        <div class="podcast-card__play">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                                <polygon points="5,3 19,12 5,21"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="podcast-card__info">
-                        <h3 class="podcast-card__title">${podcast.title}</h3>
-                        <div class="podcast-card__meta">
-                            <span class="podcast-card__date">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                    <path d="M16 2v4M8 2v4M3 10h18"/>
-                                </svg>
-                                ${podcast.date}
-                            </span>
-                        </div>
-                    </div>
-                </article>
-            `;
+        function createPodcastCard(p) {
+            return '<article class="podcast-card ' + (p.featured ? 'podcast-card--featured' : '') + '" data-id="' + p.id + '">' +
+                '<div class="podcast-card__cover">' +
+                '<img src="' + p.image + '" alt="' + p.title + '" class="podcast-card__image" loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=400&h=225&fit=crop\'">' +
+                '<span class="podcast-card__tag">' + p.category + '</span>' +
+                '<span class="podcast-card__duration">' + p.duration + '</span>' +
+                '<div class="podcast-card__play"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div>' +
+                '</div>' +
+                '<div class="podcast-card__info">' +
+                '<h3 class="podcast-card__title">' + p.title + '</h3>' +
+                '<div class="podcast-card__meta"><span class="podcast-card__date">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> ' +
+                p.date + '</span></div></div></article>';
         }
 
-        /**
-         * Рендерит список подкастов
-         */
         function renderPodcasts(podcasts) {
-            console.log(`[FlashCast] Рендеринг ${podcasts.length} подкастов`);
-            
-            if (podcasts.length === 0) {
-                elements.podcastsGrid.innerHTML = '';
-                elements.noResults.classList.add('visible');
-                return;
-            }
-            
-            elements.noResults.classList.remove('visible');
-            elements.podcastsGrid.innerHTML = podcasts.map(createPodcastCard).join('');
-            
-            // Добавляем обработчики клика на карточки
+            if (podcasts.length === 0) { dom.podcastsGrid.innerHTML = ''; dom.noResults.classList.add('visible'); return; }
+            dom.noResults.classList.remove('visible');
+            dom.podcastsGrid.innerHTML = podcasts.map(createPodcastCard).join('');
             document.querySelectorAll('.podcast-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    const id = parseInt(card.dataset.id);
-                    const podcast = podcastsData.find(p => p.id === id);
-                    if (podcast) playPodcast(podcast);
+                    const p = podcastsData.find(x => x.id === parseInt(card.dataset.id));
+                    if (p) { playPodcast(p); openFullscreenPlayer(); }
                 });
             });
         }
 
-        /**
-         * ============================================
-         * ФУНКЦИИ ФИЛЬТРАЦИИ
-         * ============================================
-         */
-
-        /**
-         * Фильтрует подкасты по категории
-         */
-        function filterByCategory(category) {
-            console.log(`[FlashCast] Фильтр: ${category}`);
-            state.activeFilter = category;
-            
-            // Обновляем активную кнопку
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.category === category);
-            });
-            
-            // Фильтруем и рендерим
-            if (category === 'all') {
-                renderPodcasts(podcastsData);
-            } else {
-                const filtered = podcastsData.filter(p => p.category === category);
-                renderPodcasts(filtered);
-            }
+        function filterByCategory(cat) {
+            state.activeFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.category === cat));
+            renderPodcasts(cat === 'all' ? podcastsData : podcastsData.filter(p => p.category === cat));
         }
 
-        /**
-         * ============================================
-         * ФУНКЦИИ ПЛЕЕРА
-         * ============================================
-         */
-
-        function playPodcast(podcast) {
-            console.log(`[FlashCast] Воспроизведение: ${podcast.title}`);
-            
-            state.currentPodcast = podcast;
-            
-            elements.playerCover.src = podcast.image;
-            elements.playerTitle.textContent = podcast.title;
-            elements.playerCategory.textContent = podcast.category;
-            
-            elements.audioElement.src = podcast.audio;
-            elements.audioElement.play();
-            
-            elements.player.classList.add('active');
-            
+        function playPodcast(p) {
+            state.currentPodcast = p;
+            state.currentIndex = podcastsData.findIndex(x => x.id === p.id);
+            dom.miniPlayerCover.src = p.image;
+            dom.miniPlayerTitle.textContent = p.title;
+            dom.miniPlayerCategory.textContent = p.category;
+            dom.playerCoverImage.src = p.image;
+            dom.playerTrackTitle.textContent = p.title;
+            dom.playerTrackCategory.textContent = p.category;
+            dom.audio.src = p.audio;
+            dom.audio.play().catch(() => {});
             state.isPlaying = true;
-            updatePlayPauseButton();
+            updatePlayPauseButtons();
+            dom.miniPlayer.classList.add('active');
         }
 
         function togglePlayPause() {
             if (!state.currentPodcast) return;
-            
-            if (state.isPlaying) {
-                elements.audioElement.pause();
-                console.log('[FlashCast] Пауза');
-            } else {
-                elements.audioElement.play();
-                console.log('[FlashCast] Воспроизведение');
-            }
-            
+            state.isPlaying ? dom.audio.pause() : dom.audio.play();
             state.isPlaying = !state.isPlaying;
-            updatePlayPauseButton();
+            updatePlayPauseButtons();
         }
 
-        function updatePlayPauseButton() {
-            elements.iconPlay.style.display = state.isPlaying ? 'none' : 'block';
-            elements.iconPause.style.display = state.isPlaying ? 'block' : 'none';
+        function updatePlayPauseButtons() {
+            document.querySelectorAll('.icon-play').forEach(i => i.style.display = state.isPlaying ? 'none' : 'block');
+            document.querySelectorAll('.icon-pause').forEach(i => i.style.display = state.isPlaying ? 'block' : 'none');
+            dom.btnMainPlayPause.classList.toggle('playing', state.isPlaying);
         }
 
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
+        function playNext() { if (state.currentIndex < podcastsData.length - 1) playPodcast(podcastsData[state.currentIndex + 1]); else if (state.isRepeat) playPodcast(podcastsData[0]); }
+        function playPrev() { if (dom.audio.currentTime > 3) dom.audio.currentTime = 0; else if (state.currentIndex > 0) playPodcast(podcastsData[state.currentIndex - 1]); }
+        function openFullscreenPlayer() { dom.fullscreenPlayer.classList.add('active'); document.body.classList.add('player-open'); }
+        function closeFullscreenPlayer() { dom.fullscreenPlayer.classList.remove('active'); document.body.classList.remove('player-open'); }
 
-        /**
-         * ============================================
-         * ОБРАБОТЧИКИ СОБЫТИЙ
-         * ============================================
-         */
+        dom.filters.addEventListener('click', e => { if (e.target.classList.contains('filter-btn')) filterByCategory(e.target.dataset.category); });
+        dom.miniPlayer.addEventListener('click', openFullscreenPlayer);
+        dom.miniPlayPause.addEventListener('click', e => { e.stopPropagation(); togglePlayPause(); });
+        dom.closePlayer.addEventListener('click', closeFullscreenPlayer);
+        dom.btnMainPlayPause.addEventListener('click', togglePlayPause);
+        dom.btnPrev.addEventListener('click', playPrev);
+        dom.btnNext.addEventListener('click', playNext);
+        dom.btnRepeat.addEventListener('click', () => { state.isRepeat = !state.isRepeat; dom.btnRepeat.classList.toggle('active', state.isRepeat); });
+        dom.btnDownload.addEventListener('click', () => { if (state.currentPodcast) { const a = document.createElement('a'); a.href = state.currentPodcast.audio; a.download = state.currentPodcast.title + '.mp3'; a.click(); } });
+        dom.audio.addEventListener('timeupdate', () => { const prog = (dom.audio.currentTime / dom.audio.duration) * 100 || 0; dom.playerProgressFill.style.width = prog + '%'; dom.miniProgressFill.style.width = prog + '%'; dom.playerCurrentTime.textContent = formatTime(dom.audio.currentTime); });
+        dom.audio.addEventListener('loadedmetadata', () => { dom.playerTotalTime.textContent = formatTime(dom.audio.duration); });
+        dom.playerProgressBar.addEventListener('click', e => { const rect = dom.playerProgressBar.getBoundingClientRect(); dom.audio.currentTime = ((e.clientX - rect.left) / rect.width) * dom.audio.duration; });
+        dom.audio.addEventListener('ended', () => { if (state.isRepeat) { dom.audio.currentTime = 0; dom.audio.play(); } else playNext(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && dom.fullscreenPlayer.classList.contains('active')) closeFullscreenPlayer(); if (e.key === ' ' && state.currentPodcast) { e.preventDefault(); togglePlayPause(); } });
 
-        // Фильтры по категориям
-        elements.filters.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-btn')) {
-                filterByCategory(e.target.dataset.category);
-            }
-        });
-
-        // Кнопка play/pause
-        elements.btnPlayPause.addEventListener('click', togglePlayPause);
-
-        // Перемотка назад
-        elements.btnBackward.addEventListener('click', () => {
-            elements.audioElement.currentTime -= 10;
-            console.log('[FlashCast] Перемотка -10 сек');
-        });
-
-        // Перемотка вперёд
-        elements.btnForward.addEventListener('click', () => {
-            elements.audioElement.currentTime += 10;
-            console.log('[FlashCast] Перемотка +10 сек');
-        });
-
-        // Обновление прогресс-бара
-        elements.audioElement.addEventListener('timeupdate', () => {
-            const { currentTime, duration } = elements.audioElement;
-            const progress = (currentTime / duration) * 100;
-            
-            elements.progressFill.style.width = `${progress}%`;
-            elements.currentTime.textContent = formatTime(currentTime);
-        });
-
-        // Установка общей длительности
-        elements.audioElement.addEventListener('loadedmetadata', () => {
-            elements.totalTime.textContent = formatTime(elements.audioElement.duration);
-        });
-
-        // Клик по прогресс-бару для перемотки
-        elements.progressBar.addEventListener('click', (e) => {
-            const rect = elements.progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            elements.audioElement.currentTime = percent * elements.audioElement.duration;
-        });
-
-        // Громкость
-        elements.volumeSlider.addEventListener('input', (e) => {
-            const volume = e.target.value / 100;
-            elements.audioElement.volume = volume;
-            state.volume = volume;
-            console.log(`[FlashCast] Громкость: ${e.target.value}%`);
-        });
-
-        // Окончание трека
-        elements.audioElement.addEventListener('ended', () => {
-            state.isPlaying = false;
-            updatePlayPauseButton();
-            console.log('[FlashCast] Трек завершён');
-        });
-
-        /**
-         * ============================================
-         * ИНИЦИАЛИЗАЦИЯ
-         * ============================================
-         */
-        function init() {
-            console.log('[FlashCast] Инициализация v2.0');
-            
-            elements.audioElement.volume = state.volume;
-            renderPodcasts(podcastsData);
-            
-            console.log('[FlashCast] Готово!');
-        }
-
-        init();
+        dom.audio.volume = state.volume;
+        renderPodcasts(podcastsData);
+        console.log('[FlashCast] v3.0 Ready!');
     </script>
 </body>
 </html>

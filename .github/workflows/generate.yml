@@ -2,10 +2,8 @@ name: Generate Podcast
 
 on:
   schedule:
-    # Запуск каждый день в 6:00 UTC (9:00 по Москве)
     - cron: '0 6 * * *'
   workflow_dispatch:
-    # Ручной запуск
 
 jobs:
   generate:
@@ -32,10 +30,8 @@ jobs:
           from gtts import gTTS
           import os
           
-          # Категории для генерации
-          categories = ['news', 'science', 'tech', 'culture', 'sport']
+          categories = ['news', 'tech', 'economy', 'politics', 'science', 'culture', 'sport']
           
-          # Генерируем аудио для каждой категории
           for cat in categories:
               script_file = f'data/script_{cat}.txt'
               if os.path.exists(script_file):
@@ -45,30 +41,23 @@ jobs:
                   tts.save(f'data/podcast_{cat}.mp3')
                   print(f'✅ Done: data/podcast_{cat}.mp3')
               else:
-                  print(f'⚠️ Skip {cat}: no script file')
+                  print(f'⚠️ Skip {cat}: no script')
           
-          # Генерируем общий подкаст (Все новости)
           if os.path.exists('data/script.txt'):
-              print('🎙️ Generating ALL NEWS...')
+              print('🎙️ Generating ALL...')
               text = open('data/script.txt', 'r', encoding='utf-8').read()
               tts = gTTS(text, lang='ru')
               tts.save('data/podcast_all.mp3')
               print('✅ Done: data/podcast_all.mp3')
-          else:
-              print('⚠️ Skip ALL: no script.txt')
-          
-          print('🎉 All podcasts generated!')
           "
       
-      - name: List generated files
-        run: |
-          echo "📁 Generated files:"
-          ls -la data/
+      - name: List files
+        run: ls -la data/
       
       - name: Commit and push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "🎙️ New podcasts $(date +'%Y-%m-%d')" || exit 0
+          git commit -m "🎙️ Podcasts $(date +'%Y-%m-%d')" || exit 0
           git push

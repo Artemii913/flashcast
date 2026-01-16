@@ -35,544 +35,140 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Source Sans 3', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
         body.player-open { overflow: hidden; }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 50vh;
-            background: radial-gradient(ellipse at top, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10, 10, 15, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: var(--spacing-md) var(--spacing-lg);
-        }
-        .header__container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-        .logo__icon {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .logo__text {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: -0.5px;
-        }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: 50vh; background: radial-gradient(ellipse at top, rgba(255, 107, 53, 0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: var(--spacing-md) var(--spacing-lg); }
+        .header__container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: var(--spacing-sm); text-decoration: none; color: var(--text-primary); }
+        .logo__icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 20px var(--accent-glow); }
+        .logo__text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; }
         .logo__text span { color: var(--accent-primary); }
-        .main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--spacing-xl) var(--spacing-lg);
-            position: relative;
-            z-index: 1;
-        }
-        .section__title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            margin-bottom: var(--spacing-md);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-        .section__title::before {
-            content: '';
-            width: 4px; height: 24px;
-            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
-            border-radius: 2px;
-        }
-        .filters {
-            display: flex;
-            gap: var(--spacing-xs);
-            margin-bottom: var(--spacing-lg);
-            flex-wrap: wrap;
-        }
-        .filter-btn {
-            padding: 8px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-lg);
-            color: var(--text-secondary);
-            font-family: 'Source Sans 3', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            white-space: nowrap;
-        }
-        .filter-btn:hover {
-            border-color: var(--accent-primary);
-            color: var(--text-primary);
-            background: var(--bg-tertiary);
-        }
-        .filter-btn.active {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 4px 15px var(--accent-glow);
-        }
-        .podcasts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: var(--spacing-md);
-        }
-        .podcast-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: fadeInUp 0.5s ease forwards;
-            opacity: 0;
-        }
-        .podcast-card:nth-child(1) { animation-delay: 0.05s; }
-        .podcast-card:nth-child(2) { animation-delay: 0.1s; }
-        .podcast-card:nth-child(3) { animation-delay: 0.15s; }
-        .podcast-card:nth-child(4) { animation-delay: 0.2s; }
-        .podcast-card:nth-child(5) { animation-delay: 0.25s; }
-        .podcast-card:nth-child(6) { animation-delay: 0.3s; }
-        .podcast-card:nth-child(7) { animation-delay: 0.35s; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .podcast-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 107, 53, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-        .podcast-card--featured {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border: 1px solid rgba(255, 107, 53, 0.2);
-        }
-        .podcast-card--featured .podcast-card__tag {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-        }
-        .podcast-card__cover {
-            position: relative;
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            background: var(--bg-tertiary);
-        }
-        .podcast-card__image {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transition: var(--transition-normal);
-        }
+        .header__ai-btn { display: flex; align-items: center; gap: var(--spacing-xs); padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: none; border-radius: var(--radius-lg); color: white; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: var(--transition-normal); box-shadow: 0 4px 15px var(--accent-glow); }
+        .header__ai-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
+        .main { max-width: 1200px; margin: 0 auto; padding: var(--spacing-xl) var(--spacing-lg); position: relative; z-index: 1; }
+        .section__title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.5rem; margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm); }
+        .section__title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary)); border-radius: 2px; }
+        .filters { display: flex; gap: var(--spacing-xs); margin-bottom: var(--spacing-lg); flex-wrap: wrap; }
+        .filter-btn { padding: 8px 16px; background: var(--bg-secondary); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-lg); color: var(--text-secondary); font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: var(--transition-normal); white-space: nowrap; }
+        .filter-btn:hover { border-color: var(--accent-primary); color: var(--text-primary); }
+        .filter-btn.active { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-color: transparent; color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+        .podcasts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-md); }
+        .podcast-card { background: var(--bg-secondary); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: var(--transition-normal); border: 1px solid rgba(255, 255, 255, 0.05); animation: fadeInUp 0.5s ease forwards; opacity: 0; }
+        .podcast-card:nth-child(1) { animation-delay: 0.05s; } .podcast-card:nth-child(2) { animation-delay: 0.1s; } .podcast-card:nth-child(3) { animation-delay: 0.15s; } .podcast-card:nth-child(4) { animation-delay: 0.2s; } .podcast-card:nth-child(5) { animation-delay: 0.25s; } .podcast-card:nth-child(6) { animation-delay: 0.3s; } .podcast-card:nth-child(7) { animation-delay: 0.35s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .podcast-card:hover { transform: translateY(-4px); border-color: rgba(255, 107, 53, 0.3); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+        .podcast-card--featured { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid rgba(255, 107, 53, 0.2); }
+        .podcast-card--featured .podcast-card__tag { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; }
+        .podcast-card__cover { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-tertiary); }
+        .podcast-card__image { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-normal); }
         .podcast-card:hover .podcast-card__image { transform: scale(1.05); }
-        .podcast-card__tag {
-            position: absolute;
-            top: var(--spacing-sm);
-            left: var(--spacing-sm);
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 4px 10px;
-            border-radius: var(--radius-sm);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--accent-secondary);
-        }
-        .podcast-card__duration {
-            position: absolute;
-            bottom: var(--spacing-sm);
-            right: var(--spacing-sm);
-            background: rgba(0, 0, 0, 0.8);
-            padding: 4px 8px;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .podcast-card__play {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 56px; height: 56px;
-            background: var(--accent-primary);
-            border-radius: var(--radius-full);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: var(--transition-normal);
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .podcast-card:hover .podcast-card__play {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        .podcast-card__tag { position: absolute; top: var(--spacing-sm); left: var(--spacing-sm); background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); padding: 4px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent-secondary); }
+        .podcast-card__duration { position: absolute; bottom: var(--spacing-sm); right: var(--spacing-sm); background: rgba(0, 0, 0, 0.8); padding: 4px 8px; border-radius: var(--radius-sm); font-size: 0.8rem; }
+        .podcast-card__play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); width: 56px; height: 56px; background: var(--accent-primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; opacity: 0; transition: var(--transition-normal); box-shadow: 0 4px 20px var(--accent-glow); }
+        .podcast-card:hover .podcast-card__play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         .podcast-card__play svg { margin-left: 3px; }
         .podcast-card__info { padding: var(--spacing-md); }
-        .podcast-card__title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            line-height: 1.4;
-            margin-bottom: var(--spacing-xs);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .podcast-card__meta {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-        .podcast-card__date { display: flex; align-items: center; gap: 4px; }
+        .podcast-card__title { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1rem; line-height: 1.4; margin-bottom: var(--spacing-xs); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .podcast-card__meta { display: flex; align-items: center; gap: var(--spacing-sm); color: var(--text-secondary); font-size: 0.85rem; }
         /* Полноэкранный плеер */
-        .fullscreen-player {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-player);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-        }
+        .fullscreen-player { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-player); z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .fullscreen-player.active { transform: translateY(0); }
-        .player-bg {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at center top, rgba(255, 107, 53, 0.15) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .player-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--spacing-md) var(--spacing-lg);
-            position: relative;
-            z-index: 1;
-        }
-        .player-header__btn {
-            width: 44px; height: 44px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: var(--radius-full);
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-fast);
-        }
+        .player-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center top, rgba(255, 107, 53, 0.15) 0%, transparent 60%); pointer-events: none; }
+        .player-header { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md) var(--spacing-lg); position: relative; z-index: 1; }
+        .player-header__btn { width: 44px; height: 44px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: var(--radius-full); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition-fast); }
         .player-header__btn:hover { background: rgba(255, 255, 255, 0.2); }
-        .player-header__title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-secondary);
-        }
-        .player-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: var(--spacing-lg);
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .player-cover {
-            width: 100%;
-            max-width: 320px;
-            aspect-ratio: 1;
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            margin-bottom: var(--spacing-xl);
-        }
+        .player-header__title { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1rem; color: var(--text-secondary); }
+        .player-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--spacing-lg); position: relative; z-index: 1; }
+        .player-cover { width: 100%; max-width: 320px; aspect-ratio: 1; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); margin-bottom: var(--spacing-xl); }
         .player-cover__image { width: 100%; height: 100%; object-fit: cover; }
-        .player-track-info {
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: var(--spacing-lg);
-        }
-        .player-track-info__title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 1.25rem;
-            line-height: 1.4;
-            margin-bottom: var(--spacing-xs);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+        .player-track-info { text-align: center; width: 100%; max-width: 400px; margin-bottom: var(--spacing-lg); }
+        .player-track-info__title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.25rem; line-height: 1.4; margin-bottom: var(--spacing-xs); }
         .player-track-info__category { color: var(--text-secondary); font-size: 1rem; }
         .player-progress { width: 100%; max-width: 400px; margin-bottom: var(--spacing-lg); }
-        .player-progress__bar {
-            width: 100%; height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-            margin-bottom: var(--spacing-xs);
-        }
-        .player-progress__fill {
-            height: 100%;
-            background: var(--text-primary);
-            border-radius: 2px;
-            width: 0%;
-            position: relative;
-            transition: width 0.1s linear;
-        }
-        .player-progress__fill::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px; height: 12px;
-            background: var(--text-primary);
-            border-radius: var(--radius-full);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .player-progress__bar:hover .player-progress__fill::after { opacity: 1; }
-        .player-progress__time {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        .player-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-        }
-        .player-controls__btn {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            padding: var(--spacing-sm);
-            border-radius: var(--radius-full);
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .player-progress__bar { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; cursor: pointer; margin-bottom: var(--spacing-xs); }
+        .player-progress__fill { height: 100%; background: var(--text-primary); border-radius: 2px; width: 0%; transition: width 0.1s linear; }
+        .player-progress__time { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); }
+        .player-controls { display: flex; align-items: center; justify-content: center; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .player-controls__btn { background: none; border: none; color: var(--text-primary); cursor: pointer; padding: var(--spacing-sm); border-radius: var(--radius-full); transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; }
         .player-controls__btn:hover { color: var(--accent-primary); transform: scale(1.1); }
-        .player-controls__btn--main {
-            width: 72px; height: 72px;
-            background: var(--accent-yellow);
-            color: var(--bg-primary);
-            border-radius: var(--radius-full);
-            margin: 0 var(--spacing-sm);
-        }
-        .player-controls__btn--main:hover {
-            background: #ffe033;
-            transform: scale(1.05);
-            color: var(--bg-primary);
-        }
+        .player-controls__btn--main { width: 72px; height: 72px; background: var(--accent-yellow); color: var(--bg-primary); border-radius: var(--radius-full); }
+        .player-controls__btn--main:hover { background: #ffe033; transform: scale(1.05); color: var(--bg-primary); }
         .player-controls__btn--main svg { margin-left: 3px; }
         .player-controls__btn--main.playing svg { margin-left: 0; }
-        .player-actions {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-lg);
-        }
-        .player-actions__btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: var(--spacing-sm) var(--spacing-md);
-            border-radius: var(--radius-lg);
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            font-family: 'Source Sans 3', sans-serif;
-            font-size: 0.85rem;
-        }
-        .player-actions__btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--text-primary);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        .player-actions__btn.active {
-            color: var(--accent-primary);
-            border-color: var(--accent-primary);
-        }
+        .player-actions { display: flex; align-items: center; justify-content: center; gap: var(--spacing-lg); }
+        .player-actions__btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-secondary); cursor: pointer; padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-lg); transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+        .player-actions__btn:hover { background: rgba(255, 255, 255, 0.15); color: var(--text-primary); }
+        .player-actions__btn.active { color: var(--accent-primary); border-color: var(--accent-primary); }
         /* Мини-плеер */
-        .mini-player {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(10, 10, 15, 0.98), rgba(18, 18, 26, 0.95));
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: var(--spacing-sm) var(--spacing-lg);
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-        }
+        .mini-player { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10, 10, 15, 0.98), rgba(18, 18, 26, 0.95)); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: var(--spacing-sm) var(--spacing-lg); z-index: 1000; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
         .mini-player.active { transform: translateY(0); }
-        .mini-player__container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-md);
-        }
-        .mini-player__track {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            flex: 1;
-            min-width: 0;
-        }
-        .mini-player__cover {
-            width: 48px; height: 48px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            flex-shrink: 0;
-        }
+        .mini-player__container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: var(--spacing-md); }
+        .mini-player__track { display: flex; align-items: center; gap: var(--spacing-sm); flex: 1; min-width: 0; }
+        .mini-player__cover { width: 48px; height: 48px; border-radius: var(--radius-sm); object-fit: cover; }
         .mini-player__info { overflow: hidden; min-width: 0; }
-        .mini-player__title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .mini-player__title { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mini-player__category { color: var(--text-secondary); font-size: 0.8rem; }
-        .mini-player__controls { display: flex; align-items: center; gap: var(--spacing-xs); }
-        .mini-player__btn {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            padding: var(--spacing-xs);
-            border-radius: var(--radius-full);
-            transition: var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .mini-player__btn:hover { color: var(--accent-primary); }
-        .mini-player__btn--main {
-            width: 44px; height: 44px;
-            background: var(--accent-yellow);
-            color: var(--bg-primary);
-        }
-        .mini-player__btn--main:hover { background: #ffe033; color: var(--bg-primary); }
-        .mini-player__progress {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .mini-player__progress-fill {
-            height: 100%;
-            background: var(--accent-primary);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+        .mini-player__btn { background: none; border: none; color: var(--text-primary); cursor: pointer; padding: var(--spacing-xs); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; }
+        .mini-player__btn--main { width: 44px; height: 44px; background: var(--accent-yellow); color: var(--bg-primary); }
+        .mini-player__progress { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(255, 255, 255, 0.1); }
+        .mini-player__progress-fill { height: 100%; background: var(--accent-primary); width: 0%; }
+        /* AI Чат */
+        .ai-chat { position: fixed; bottom: 80px; right: 20px; width: 380px; max-width: calc(100vw - 40px); height: 500px; max-height: 70vh; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); z-index: 1500; display: flex; flex-direction: column; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .ai-chat.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+        .ai-chat__header { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .ai-chat__header-title { display: flex; align-items: center; gap: var(--spacing-xs); font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        .ai-chat__header-title svg { color: var(--accent-primary); }
+        .ai-chat__close { width: 32px; height: 32px; background: rgba(255, 255, 255, 0.1); border: none; border-radius: var(--radius-full); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .ai-chat__close:hover { background: rgba(255, 255, 255, 0.2); color: var(--text-primary); }
+        .ai-chat__messages { flex: 1; overflow-y: auto; padding: var(--spacing-md); display: flex; flex-direction: column; gap: var(--spacing-sm); }
+        .ai-chat__message { max-width: 85%; padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-lg); font-size: 0.9rem; line-height: 1.5; }
+        .ai-chat__message--bot { background: var(--bg-tertiary); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .ai-chat__message--user { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .ai-chat__message--result { background: var(--bg-tertiary); border: 1px solid rgba(255, 107, 53, 0.3); cursor: pointer; transition: var(--transition-fast); }
+        .ai-chat__message--result:hover { border-color: var(--accent-primary); }
+        .ai-chat__result-title { font-weight: 600; margin-bottom: 4px; }
+        .ai-chat__result-meta { font-size: 0.8rem; color: var(--text-secondary); }
+        .ai-chat__input-area { display: flex; gap: var(--spacing-xs); padding: var(--spacing-md); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+        .ai-chat__input { flex: 1; padding: var(--spacing-sm) var(--spacing-md); background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-lg); color: var(--text-primary); font-family: inherit; font-size: 0.9rem; outline: none; }
+        .ai-chat__input:focus { border-color: var(--accent-primary); }
+        .ai-chat__input::placeholder { color: var(--text-muted); }
+        .ai-chat__send { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: none; border-radius: var(--radius-full); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition-fast); }
+        .ai-chat__send:hover { transform: scale(1.05); }
+        .ai-chat__send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         /* Адаптивность */
         @media (max-width: 768px) {
             :root { --spacing-lg: 1.5rem; --spacing-xl: 2rem; }
             .header { padding: var(--spacing-sm) var(--spacing-md); }
+            .header__ai-btn span { display: none; }
+            .header__ai-btn { padding: 10px; }
             .logo__text { font-size: 1.3rem; }
             .main { padding: var(--spacing-lg) var(--spacing-md); }
-            .section__title { font-size: 1.25rem; }
-            .filters {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                margin: 0 calc(-1 * var(--spacing-md)) var(--spacing-lg);
-                padding: 0 var(--spacing-md);
-            }
+            .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--spacing-md)) var(--spacing-lg); padding: 0 var(--spacing-md); }
             .filters::-webkit-scrollbar { display: none; }
-            .filter-btn { padding: 6px 14px; font-size: 0.85rem; }
             .podcasts-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
             .podcast-card__info { padding: var(--spacing-sm); }
             .podcast-card__title { font-size: 0.9rem; }
-            .podcast-card__meta { font-size: 0.75rem; }
-            .player-header { padding: var(--spacing-sm) var(--spacing-md); }
-            .player-content { padding: var(--spacing-md); }
-            .player-cover { max-width: 280px; margin-bottom: var(--spacing-lg); }
-            .player-track-info__title { font-size: 1.1rem; }
+            .ai-chat { bottom: 70px; right: 10px; left: 10px; width: auto; max-width: none; height: 60vh; }
+            .player-cover { max-width: 250px; }
             .player-controls__btn--main { width: 64px; height: 64px; }
-            .mini-player { padding: var(--spacing-sm) var(--spacing-md); }
-            .mini-player__cover { width: 40px; height: 40px; }
-            .mini-player__title { font-size: 0.85rem; }
-            .mini-player__btn--main { width: 40px; height: 40px; }
         }
         @media (max-width: 480px) {
             .podcasts-grid { grid-template-columns: 1fr; }
-            .podcast-card__cover { aspect-ratio: 2 / 1; }
-            .filter-btn { padding: 6px 12px; font-size: 0.8rem; }
-            .player-cover { max-width: 240px; }
-            .player-controls { gap: var(--spacing-sm); }
-            .player-controls__btn--main { width: 56px; height: 56px; }
-            .player-actions { flex-wrap: wrap; gap: var(--spacing-sm); }
-            .player-actions__btn { padding: var(--spacing-xs) var(--spacing-sm); font-size: 0.8rem; }
+            .ai-chat { height: 70vh; }
         }
         .no-results { text-align: center; padding: var(--spacing-xl); color: var(--text-secondary); display: none; }
         .no-results.visible { display: block; }
-        .no-results__icon { font-size: 3rem; margin-bottom: var(--spacing-md); opacity: 0.5; }
-        .no-results__text { font-size: 1.1rem; }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header__container">
-            <a href="#" class="logo">
-                <div class="logo__icon">🎙️</div>
-                <div class="logo__text">Flash<span>Cast</span></div>
-            </a>
+            <a href="#" class="logo"><div class="logo__icon">🎙️</div><div class="logo__text">Flash<span>Cast</span></div></a>
+            <button class="header__ai-btn" id="openAiChat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10a10 10 0 0 1-10-10c0-5.52 4.48-10 10-10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                <span>AI Подкаст</span>
+            </button>
         </div>
     </header>
     <main class="main">
@@ -587,84 +183,81 @@
             <button class="filter-btn" data-category="Культура">Культура</button>
         </div>
         <div class="podcasts-grid" id="podcastsGrid"></div>
-        <div class="no-results" id="noResults">
-            <div class="no-results__icon">📭</div>
-            <p class="no-results__text">Нет подкастов в этой категории.</p>
-        </div>
+        <div class="no-results" id="noResults"><div class="no-results__icon">📭</div><p>Нет подкастов в этой категории.</p></div>
     </main>
+    <!-- AI Чат -->
+    <div class="ai-chat" id="aiChat">
+        <div class="ai-chat__header">
+            <div class="ai-chat__header-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                AI Ассистент
+            </div>
+            <button class="ai-chat__close" id="closeAiChat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="ai-chat__messages" id="chatMessages">
+            <div class="ai-chat__message ai-chat__message--bot">Привет! 👋 Я помогу найти подкаст по вашим интересам. Напишите тему — например: "космос", "спорт" или "новые технологии".</div>
+        </div>
+        <div class="ai-chat__input-area">
+            <input type="text" class="ai-chat__input" id="chatInput" placeholder="Напишите тему..." autocomplete="off">
+            <button class="ai-chat__send" id="chatSend"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+    </div>
+    <!-- Мини-плеер -->
     <div class="mini-player" id="miniPlayer">
         <div class="mini-player__progress"><div class="mini-player__progress-fill" id="miniProgressFill"></div></div>
         <div class="mini-player__container">
             <div class="mini-player__track">
                 <img src="" alt="" class="mini-player__cover" id="miniPlayerCover">
-                <div class="mini-player__info">
-                    <div class="mini-player__title" id="miniPlayerTitle">—</div>
-                    <div class="mini-player__category" id="miniPlayerCategory">—</div>
-                </div>
+                <div class="mini-player__info"><div class="mini-player__title" id="miniPlayerTitle">—</div><div class="mini-player__category" id="miniPlayerCategory">—</div></div>
             </div>
-            <div class="mini-player__controls">
-                <button class="mini-player__btn mini-player__btn--main" id="miniPlayPause" onclick="event.stopPropagation()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                </button>
-            </div>
+            <button class="mini-player__btn mini-player__btn--main" id="miniPlayPause" onclick="event.stopPropagation()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
         </div>
     </div>
+    <!-- Полноэкранный плеер -->
     <div class="fullscreen-player" id="fullscreenPlayer">
         <div class="player-bg"></div>
         <div class="player-header">
-            <button class="player-header__btn" id="closePlayer" title="Закрыть">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
+            <button class="player-header__btn" id="closePlayer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
             <span class="player-header__title">Сейчас играет</span>
-            <button class="player-header__btn" id="playlistBtn" title="Плейлист">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-            </button>
+            <button class="player-header__btn" id="playlistBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
         </div>
         <div class="player-content">
             <div class="player-cover"><img src="" alt="" class="player-cover__image" id="playerCoverImage"></div>
-            <div class="player-track-info">
-                <h2 class="player-track-info__title" id="playerTrackTitle">—</h2>
-                <p class="player-track-info__category" id="playerTrackCategory">—</p>
-            </div>
+            <div class="player-track-info"><h2 class="player-track-info__title" id="playerTrackTitle">—</h2><p class="player-track-info__category" id="playerTrackCategory">—</p></div>
             <div class="player-progress">
                 <div class="player-progress__bar" id="playerProgressBar"><div class="player-progress__fill" id="playerProgressFill"></div></div>
                 <div class="player-progress__time"><span id="playerCurrentTime">0:00</span><span id="playerTotalTime">0:00</span></div>
             </div>
             <div class="player-controls">
-                <button class="player-controls__btn" id="btnPrev" title="Предыдущий">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
-                </button>
-                <button class="player-controls__btn player-controls__btn--main" id="btnMainPlayPause" title="Воспроизвести">
+                <button class="player-controls__btn" id="btnPrev"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+                <button class="player-controls__btn player-controls__btn--main" id="btnMainPlayPause">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg>
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                 </button>
-                <button class="player-controls__btn" id="btnNext" title="Следующий">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                </button>
+                <button class="player-controls__btn" id="btnNext"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
             </div>
             <div class="player-actions">
-                <button class="player-actions__btn" id="btnRepeat" title="Повтор">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                </button>
-                <button class="player-actions__btn" id="btnDownload" title="Скачать">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                </button>
+                <button class="player-actions__btn" id="btnRepeat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+                <button class="player-actions__btn" id="btnDownload"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
             </div>
         </div>
     </div>
     <audio id="audioElement"></audio>
     <script>
+        // === ДАННЫЕ ===
         const podcastsData = [
-            { id: 0, title: "Все новости дня — полный дайджест", category: "Все новости", date: "16 янв 2026", duration: "45:00", image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop", audio: "data/podcast_all.mp3", featured: true },
-            { id: 1, title: "Главные новости технологий за неделю", category: "Технологии", date: "15 янв 2026", duration: "12:34", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop", audio: "data/podcast_tech.mp3" },
-            { id: 2, title: "Обзор экономических событий: курсы валют и биржи", category: "Экономика", date: "14 янв 2026", duration: "8:45", image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=400&fit=crop", audio: "data/podcast_economy.mp3" },
-            { id: 3, title: "Спорт: итоги матчей и турнирные таблицы", category: "Спорт", date: "14 янв 2026", duration: "15:20", image: "https://images.unsplash.com/photo-1461896836934-428b4e24b0fa?w=400&h=400&fit=crop", audio: "data/podcast_sport.mp3" },
-            { id: 4, title: "Политика: главные заявления и решения", category: "Политика", date: "13 янв 2026", duration: "10:15", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400&h=400&fit=crop", audio: "data/podcast_politics.mp3" },
-            { id: 5, title: "Наука: открытия и исследования недели", category: "Наука", date: "12 янв 2026", duration: "14:30", image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop", audio: "data/podcast_science.mp3" },
-            { id: 6, title: "Культура: премьеры, выставки и события", category: "Культура", date: "11 янв 2026", duration: "11:50", image: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400&h=400&fit=crop", audio: "data/podcast_culture.mp3" }
+            { id: 0, title: "Все новости дня — полный дайджест", category: "Все новости", date: "16 янв 2026", duration: "45:00", image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop", audio: "data/podcast_all.mp3", featured: true, keywords: ["новости", "дайджест", "все", "главное", "события"] },
+            { id: 1, title: "Главные новости технологий за неделю", category: "Технологии", date: "15 янв 2026", duration: "12:34", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop", audio: "data/podcast_tech.mp3", keywords: ["технологии", "tech", "it", "гаджеты", "apple", "google", "ai", "искусственный интеллект", "программирование"] },
+            { id: 2, title: "Обзор экономических событий: курсы валют и биржи", category: "Экономика", date: "14 янв 2026", duration: "8:45", image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=400&fit=crop", audio: "data/podcast_economy.mp3", keywords: ["экономика", "финансы", "деньги", "курс", "валюта", "биржа", "акции", "инвестиции", "бизнес"] },
+            { id: 3, title: "Спорт: итоги матчей и турнирные таблицы", category: "Спорт", date: "14 янв 2026", duration: "15:20", image: "https://images.unsplash.com/photo-1461896836934-428b4e24b0fa?w=400&h=400&fit=crop", audio: "data/podcast_sport.mp3", keywords: ["спорт", "футбол", "хоккей", "баскетбол", "теннис", "матч", "чемпионат", "олимпиада"] },
+            { id: 4, title: "Политика: главные заявления и решения", category: "Политика", date: "13 янв 2026", duration: "10:15", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400&h=400&fit=crop", audio: "data/podcast_politics.mp3", keywords: ["политика", "выборы", "президент", "правительство", "закон", "реформа"] },
+            { id: 5, title: "Наука: открытия и исследования недели", category: "Наука", date: "12 янв 2026", duration: "14:30", image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop", audio: "data/podcast_science.mp3", keywords: ["наука", "космос", "физика", "биология", "открытие", "исследование", "ученые", "nasa", "марс"] },
+            { id: 6, title: "Культура: премьеры, выставки и события", category: "Культура", date: "11 янв 2026", duration: "11:50", image: "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400&h=400&fit=crop", audio: "data/podcast_culture.mp3", keywords: ["культура", "кино", "фильм", "музыка", "театр", "выставка", "искусство", "концерт"] }
         ];
-
+        // === DOM ===
         const dom = {
             podcastsGrid: document.getElementById('podcastsGrid'),
             noResults: document.getElementById('noResults'),
@@ -689,80 +282,110 @@
             btnMainPlayPause: document.getElementById('btnMainPlayPause'),
             btnRepeat: document.getElementById('btnRepeat'),
             btnDownload: document.getElementById('btnDownload'),
-            audio: document.getElementById('audioElement')
+            audio: document.getElementById('audioElement'),
+            aiChat: document.getElementById('aiChat'),
+            openAiChat: document.getElementById('openAiChat'),
+            closeAiChat: document.getElementById('closeAiChat'),
+            chatMessages: document.getElementById('chatMessages'),
+            chatInput: document.getElementById('chatInput'),
+            chatSend: document.getElementById('chatSend')
         };
-
+        // === СОСТОЯНИЕ ===
         let state = { currentPodcast: null, currentIndex: -1, isPlaying: false, isRepeat: false, volume: 0.8, activeFilter: 'all' };
-
+        // === УТИЛИТЫ ===
         function formatTime(s) { if (isNaN(s)) return '0:00'; return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0'); }
-
+        // === РЕНДЕРИНГ КАРТОЧЕК ===
         function createPodcastCard(p) {
-            return '<article class="podcast-card ' + (p.featured ? 'podcast-card--featured' : '') + '" data-id="' + p.id + '">' +
-                '<div class="podcast-card__cover">' +
-                '<img src="' + p.image + '" alt="' + p.title + '" class="podcast-card__image" loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=400&h=225&fit=crop\'">' +
-                '<span class="podcast-card__tag">' + p.category + '</span>' +
-                '<span class="podcast-card__duration">' + p.duration + '</span>' +
-                '<div class="podcast-card__play"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div>' +
-                '</div>' +
-                '<div class="podcast-card__info">' +
-                '<h3 class="podcast-card__title">' + p.title + '</h3>' +
-                '<div class="podcast-card__meta"><span class="podcast-card__date">' +
-                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> ' +
-                p.date + '</span></div></div></article>';
+            return '<article class="podcast-card ' + (p.featured ? 'podcast-card--featured' : '') + '" data-id="' + p.id + '"><div class="podcast-card__cover"><img src="' + p.image + '" alt="' + p.title + '" class="podcast-card__image" loading="lazy"><span class="podcast-card__tag">' + p.category + '</span><span class="podcast-card__duration">' + p.duration + '</span><div class="podcast-card__play"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div><div class="podcast-card__info"><h3 class="podcast-card__title">' + p.title + '</h3><div class="podcast-card__meta"><span>' + p.date + '</span></div></div></article>';
         }
-
         function renderPodcasts(podcasts) {
             if (podcasts.length === 0) { dom.podcastsGrid.innerHTML = ''; dom.noResults.classList.add('visible'); return; }
             dom.noResults.classList.remove('visible');
             dom.podcastsGrid.innerHTML = podcasts.map(createPodcastCard).join('');
             document.querySelectorAll('.podcast-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const p = podcastsData.find(x => x.id === parseInt(card.dataset.id));
-                    if (p) { playPodcast(p); openFullscreenPlayer(); }
-                });
+                card.addEventListener('click', () => { const p = podcastsData.find(x => x.id === parseInt(card.dataset.id)); if (p) { playPodcast(p); openFullscreenPlayer(); } });
             });
         }
-
         function filterByCategory(cat) {
             state.activeFilter = cat;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.category === cat));
             renderPodcasts(cat === 'all' ? podcastsData : podcastsData.filter(p => p.category === cat));
         }
-
+        // === ПЛЕЕР ===
         function playPodcast(p) {
-            state.currentPodcast = p;
-            state.currentIndex = podcastsData.findIndex(x => x.id === p.id);
-            dom.miniPlayerCover.src = p.image;
-            dom.miniPlayerTitle.textContent = p.title;
-            dom.miniPlayerCategory.textContent = p.category;
-            dom.playerCoverImage.src = p.image;
-            dom.playerTrackTitle.textContent = p.title;
-            dom.playerTrackCategory.textContent = p.category;
-            dom.audio.src = p.audio;
-            dom.audio.play().catch(() => {});
-            state.isPlaying = true;
-            updatePlayPauseButtons();
-            dom.miniPlayer.classList.add('active');
+            state.currentPodcast = p; state.currentIndex = podcastsData.findIndex(x => x.id === p.id);
+            dom.miniPlayerCover.src = p.image; dom.miniPlayerTitle.textContent = p.title; dom.miniPlayerCategory.textContent = p.category;
+            dom.playerCoverImage.src = p.image; dom.playerTrackTitle.textContent = p.title; dom.playerTrackCategory.textContent = p.category;
+            dom.audio.src = p.audio; dom.audio.play().catch(() => {});
+            state.isPlaying = true; updatePlayPauseButtons(); dom.miniPlayer.classList.add('active');
         }
-
-        function togglePlayPause() {
-            if (!state.currentPodcast) return;
-            state.isPlaying ? dom.audio.pause() : dom.audio.play();
-            state.isPlaying = !state.isPlaying;
-            updatePlayPauseButtons();
-        }
-
+        function togglePlayPause() { if (!state.currentPodcast) return; state.isPlaying ? dom.audio.pause() : dom.audio.play(); state.isPlaying = !state.isPlaying; updatePlayPauseButtons(); }
         function updatePlayPauseButtons() {
             document.querySelectorAll('.icon-play').forEach(i => i.style.display = state.isPlaying ? 'none' : 'block');
             document.querySelectorAll('.icon-pause').forEach(i => i.style.display = state.isPlaying ? 'block' : 'none');
-            dom.btnMainPlayPause.classList.toggle('playing', state.isPlaying);
         }
-
         function playNext() { if (state.currentIndex < podcastsData.length - 1) playPodcast(podcastsData[state.currentIndex + 1]); else if (state.isRepeat) playPodcast(podcastsData[0]); }
         function playPrev() { if (dom.audio.currentTime > 3) dom.audio.currentTime = 0; else if (state.currentIndex > 0) playPodcast(podcastsData[state.currentIndex - 1]); }
         function openFullscreenPlayer() { dom.fullscreenPlayer.classList.add('active'); document.body.classList.add('player-open'); }
         function closeFullscreenPlayer() { dom.fullscreenPlayer.classList.remove('active'); document.body.classList.remove('player-open'); }
-
+        // === AI ЧАТ ===
+        function openAiChat() { dom.aiChat.classList.add('active'); dom.chatInput.focus(); }
+        function closeAiChat() { dom.aiChat.classList.remove('active'); }
+        function addChatMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = 'ai-chat__message ai-chat__message--' + type;
+            msg.innerHTML = text;
+            dom.chatMessages.appendChild(msg);
+            dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight;
+            return msg;
+        }
+        function addResultMessage(podcast) {
+            const msg = document.createElement('div');
+            msg.className = 'ai-chat__message ai-chat__message--result';
+            msg.innerHTML = '<div class="ai-chat__result-title">🎧 ' + podcast.title + '</div><div class="ai-chat__result-meta">' + podcast.category + ' • ' + podcast.duration + '</div>';
+            msg.addEventListener('click', () => { playPodcast(podcast); openFullscreenPlayer(); closeAiChat(); });
+            dom.chatMessages.appendChild(msg);
+            dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight;
+        }
+        function searchPodcasts(query) {
+            const q = query.toLowerCase().trim();
+            if (!q) return [];
+            return podcastsData.filter(p => {
+                const inTitle = p.title.toLowerCase().includes(q);
+                const inCategory = p.category.toLowerCase().includes(q);
+                const inKeywords = p.keywords && p.keywords.some(k => k.includes(q) || q.includes(k));
+                return inTitle || inCategory || inKeywords;
+            });
+        }
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ru-RU'; utterance.rate = 1; utterance.pitch = 1;
+                const voices = window.speechSynthesis.getVoices();
+                const ruVoice = voices.find(v => v.lang.startsWith('ru'));
+                if (ruVoice) utterance.voice = ruVoice;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        function handleChatSubmit() {
+            const query = dom.chatInput.value.trim();
+            if (!query) return;
+            addChatMessage(query, 'user');
+            dom.chatInput.value = '';
+            setTimeout(() => {
+                const results = searchPodcasts(query);
+                if (results.length > 0) {
+                    addChatMessage('Нашёл ' + results.length + ' подкаст(ов) по вашему запросу. Нажмите чтобы послушать:', 'bot');
+                    results.forEach(p => addResultMessage(p));
+                    speakText('Нашёл ' + results.length + ' подкастов по теме ' + query);
+                } else {
+                    addChatMessage('К сожалению, не нашёл подкастов по запросу "' + query + '". Попробуйте другие ключевые слова: технологии, спорт, наука, культура, экономика, политика.', 'bot');
+                    speakText('Не нашёл подкастов по этой теме. Попробуйте другой запрос.');
+                }
+            }, 500);
+        }
+        // === ОБРАБОТЧИКИ ===
         dom.filters.addEventListener('click', e => { if (e.target.classList.contains('filter-btn')) filterByCategory(e.target.dataset.category); });
         dom.miniPlayer.addEventListener('click', openFullscreenPlayer);
         dom.miniPlayPause.addEventListener('click', e => { e.stopPropagation(); togglePlayPause(); });
@@ -776,11 +399,15 @@
         dom.audio.addEventListener('loadedmetadata', () => { dom.playerTotalTime.textContent = formatTime(dom.audio.duration); });
         dom.playerProgressBar.addEventListener('click', e => { const rect = dom.playerProgressBar.getBoundingClientRect(); dom.audio.currentTime = ((e.clientX - rect.left) / rect.width) * dom.audio.duration; });
         dom.audio.addEventListener('ended', () => { if (state.isRepeat) { dom.audio.currentTime = 0; dom.audio.play(); } else playNext(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape' && dom.fullscreenPlayer.classList.contains('active')) closeFullscreenPlayer(); if (e.key === ' ' && state.currentPodcast) { e.preventDefault(); togglePlayPause(); } });
-
+        dom.openAiChat.addEventListener('click', openAiChat);
+        dom.closeAiChat.addEventListener('click', closeAiChat);
+        dom.chatSend.addEventListener('click', handleChatSubmit);
+        dom.chatInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleChatSubmit(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (dom.aiChat.classList.contains('active')) closeAiChat(); else if (dom.fullscreenPlayer.classList.contains('active')) closeFullscreenPlayer(); } });
+        // === INIT ===
         dom.audio.volume = state.volume;
         renderPodcasts(podcastsData);
-        console.log('[FlashCast] v3.0 Ready!');
+        if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
     </script>
 </body>
 </html>

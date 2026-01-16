@@ -1,27 +1,26 @@
 {
   "news": {
     "name": "Новости",
-    "news_count": 6,
-    "script_file": "data/script_news.txt"
-  },
-  "science": {
-    "name": "Наука",
-    "news_count": 4,
-    "script_file": "data/script_science.txt"
+    "news_count": 6
   },
   "tech": {
     "name": "Технологии",
-    "news_count": 4,
-    "script_file": "data/script_tech.txt"
+    "news_count": 4
+  },
+  "economy": {
+    "name": "Экономика",
+    "news_count": 4
+  },
+  "science": {
+    "name": "Наука",
+    "news_count": 4
   },
   "culture": {
     "name": "Культура",
-    "news_count": 2,
-    "script_file": "data/script_culture.txt"
+    "news_count": 2
   },
   "sport": {
     "name": "Спорт",
-    "news_count": 4,
-    "script_file": "data/script_sport.txt"
+    "news_count": 4
   }
 }

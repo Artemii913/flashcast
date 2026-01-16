@@ -2,8 +2,10 @@ name: Generate Podcast
 
 on:
   schedule:
+    # Запуск каждый день в 6:00 UTC (9:00 по Москве)
     - cron: '0 6 * * *'
   workflow_dispatch:
+    # Ручной запуск
 
 jobs:
   generate:
@@ -30,29 +32,43 @@ jobs:
           from gtts import gTTS
           import os
           
+          # Категории для генерации
           categories = ['news', 'science', 'tech', 'culture', 'sport']
           
+          # Генерируем аудио для каждой категории
           for cat in categories:
               script_file = f'data/script_{cat}.txt'
               if os.path.exists(script_file):
-                  print(f'Generating {cat}...')
+                  print(f'🎙️ Generating {cat}...')
                   text = open(script_file, 'r', encoding='utf-8').read()
                   tts = gTTS(text, lang='ru')
                   tts.save(f'data/podcast_{cat}.mp3')
-                  print(f'Done: podcast_{cat}.mp3')
+                  print(f'✅ Done: data/podcast_{cat}.mp3')
+              else:
+                  print(f'⚠️ Skip {cat}: no script file')
           
+          # Генерируем общий подкаст (Все новости)
           if os.path.exists('data/script.txt'):
-              print('Generating main...')
+              print('🎙️ Generating ALL NEWS...')
               text = open('data/script.txt', 'r', encoding='utf-8').read()
               tts = gTTS(text, lang='ru')
-              tts.save('podcast.mp3')
-              print('Done: podcast.mp3')
+              tts.save('data/podcast_all.mp3')
+              print('✅ Done: data/podcast_all.mp3')
+          else:
+              print('⚠️ Skip ALL: no script.txt')
+          
+          print('🎉 All podcasts generated!')
           "
+      
+      - name: List generated files
+        run: |
+          echo "📁 Generated files:"
+          ls -la data/
       
       - name: Commit and push
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "New podcasts" || exit 0
+          git commit -m "🎙️ New podcasts $(date +'%Y-%m-%d')" || exit 0
           git push

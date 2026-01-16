@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-FlashCast - RSS Parser v3.0
-Добавлены: Экономика, Политика
+FlashCast - RSS Parser v3.1
+Исправлено: убраны дубликаты новостей
 """
 
 import feedparser
@@ -12,9 +12,6 @@ from datetime import datetime
 from html import unescape
 import re
 
-# ============================================
-# КАТЕГОРИИ И ИСТОЧНИКИ
-# ============================================
 CATEGORIES = {
     "news": {
         "name": "Новости",
@@ -33,15 +30,15 @@ CATEGORIES = {
     "economy": {
         "name": "Экономика",
         "sources": [
-            {"name": "РБК Экономика", "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss", "count": 2},
-            {"name": "Ведомости Экономика", "url": "https://www.vedomosti.ru/rss/rubric/economics", "count": 2},
+            {"name": "РБК", "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss", "count": 2},
+            {"name": "Ведомости", "url": "https://www.vedomosti.ru/rss/rubric/economics", "count": 2},
         ]
     },
     "politics": {
         "name": "Политика",
         "sources": [
-            {"name": "РИА Политика", "url": "https://ria.ru/export/rss2/politics/index.xml", "count": 2},
-            {"name": "Lenta Политика", "url": "https://lenta.ru/rss/news/russia/politics", "count": 2},
+            {"name": "РИА", "url": "https://ria.ru/export/rss2/politics/index.xml", "count": 2},
+            {"name": "Lenta", "url": "https://lenta.ru/rss/news/russia/politics", "count": 2},
         ]
     },
     "science": {
@@ -83,7 +80,10 @@ def truncate_text(text, max_length=300):
     return truncated + "..."
 
 def fetch_news(sources):
+    """Загружает новости БЕЗ дубликатов"""
     news_list = []
+    seen_titles = set()  # Для отслеживания дубликатов
+    
     for source in sources:
         try:
             print(f"  Загружаю: {source['name']}")
@@ -91,28 +91,54 @@ def fetch_news(sources):
             if not feed.entries:
                 print(f"    ⚠️ Нет записей")
                 continue
-            for entry in feed.entries[:source['count']]:
+            
+            count = 0
+            for entry in feed.entries:
+                if count >= source['count']:
+                    break
+                    
                 title = clean_html(entry.get('title', ''))
+                
+                # Проверяем дубликат по заголовку
+                title_lower = title.lower().strip()
+                if title_lower in seen_titles:
+                    print(f"    ⏭️ Дубликат: {title[:40]}...")
+                    continue
+                
+                seen_titles.add(title_lower)
+                
                 description = clean_html(entry.get('summary', '') or entry.get('description', ''))
                 description = truncate_text(description)
+                
                 news_list.append({
                     "title": title,
                     "description": description,
                     "source": source['name']
                 })
                 print(f"    + {title[:50]}...")
+                count += 1
+                
         except Exception as e:
             print(f"  ❌ Ошибка {source['name']}: {e}")
+    
     return news_list
 
 def fetch_all_news():
+    """Загружает все новости из всех категорий БЕЗ дубликатов"""
     all_news = []
+    seen_titles = set()
+    
     for cat_id, cat_info in CATEGORIES.items():
         print(f"\n📁 {cat_info['name']}")
         news = fetch_news(cat_info['sources'])
+        
         for item in news:
-            item['category'] = cat_info['name']
-        all_news.extend(news)
+            title_lower = item['title'].lower().strip()
+            if title_lower not in seen_titles:
+                seen_titles.add(title_lower)
+                item['category'] = cat_info['name']
+                all_news.append(item)
+    
     return all_news
 
 def generate_script(category_name, news_list):
@@ -147,38 +173,47 @@ def generate_podcast_script(news_list):
 
 def main():
     print("=" * 50)
-    print("FlashCast RSS Parser v3.0")
+    print("FlashCast RSS Parser v3.1")
     print("=" * 50)
     os.makedirs("data", exist_ok=True)
     all_data = {}
     all_news_combined = []
+    global_seen = set()  # Глобальный трекер дубликатов
     
     for cat_id, cat_info in CATEGORIES.items():
         print(f"\n📁 {cat_info['name']}")
         news = fetch_news(cat_info['sources'])
-        if news:
-            for item in news:
+        
+        # Фильтруем дубликаты глобально
+        unique_news = []
+        for item in news:
+            title_lower = item['title'].lower().strip()
+            if title_lower not in global_seen:
+                global_seen.add(title_lower)
                 item['category'] = cat_info['name']
-            script = generate_script(cat_info['name'], news)
+                unique_news.append(item)
+        
+        if unique_news:
+            script = generate_script(cat_info['name'], unique_news)
             script_file = f"data/script_{cat_id}.txt"
             with open(script_file, 'w', encoding='utf-8') as f:
                 f.write(script)
-            print(f"  ✓ {script_file}")
-            all_data[cat_id] = {"name": cat_info['name'], "news_count": len(news)}
-            all_news_combined.extend(news)
+            print(f"  ✓ {script_file} ({len(unique_news)} новостей)")
+            all_data[cat_id] = {"name": cat_info['name'], "news_count": len(unique_news)}
+            all_news_combined.extend(unique_news)
     
     print(f"\n📁 Все новости")
     if all_news_combined:
         script = generate_podcast_script(all_news_combined)
         with open("data/script.txt", 'w', encoding='utf-8') as f:
             f.write(script)
-        print(f"  ✓ data/script.txt")
+        print(f"  ✓ data/script.txt ({len(all_news_combined)} новостей)")
     
     with open("data/categories.json", 'w', encoding='utf-8') as f:
         json.dump(all_data, f, ensure_ascii=False, indent=2)
     
     print("\n" + "=" * 50)
-    print(f"✅ Готово! Новостей: {len(all_news_combined)}")
+    print(f"✅ Готово! Всего: {len(all_news_combined)} уникальных новостей")
 
 if __name__ == "__main__":
     main()

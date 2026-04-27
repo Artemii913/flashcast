@@ -1,0 +1,79 @@
+[
+  {
+    "id": 0,
+    "title": "Все новости дня — полный дайджест",
+    "category": "Все новости",
+    "date": "Сегодня",
+    "duration": "25:00",
+    "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop",
+    "audio": "data/podcast_all.mp3",
+    "featured": true,
+    "keywords": ["новости","дайджест","все","главное","сегодня","день","обзор"]
+  },
+  {
+    "id": 1,
+    "title": "Технологии: AI, гаджеты и IT",
+    "category": "Технологии",
+    "date": "Сегодня",
+    "duration": "10:00",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",
+    "audio": "data/podcast_tech.mp3",
+    "featured": false,
+    "keywords": ["технологии","tech","it","гаджеты","apple","google","ai","искусственный интеллект","программирование","код","смартфон","компьютер","робот"]
+  },
+  {
+    "id": 2,
+    "title": "Экономика: курсы, биржи, финансы",
+    "category": "Экономика",
+    "date": "Сегодня",
+    "duration": "8:00",
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",
+    "audio": "data/podcast_economy.mp3",
+    "featured": false,
+    "keywords": ["экономика","финансы","деньги","курс","валюта","доллар","евро","рубль","биржа","акции","инвестиции","бизнес","банк","кризис"]
+  },
+  {
+    "id": 3,
+    "title": "Спорт: матчи, результаты, трансферы",
+    "category": "Спорт",
+    "date": "Сегодня",
+    "duration": "12:00",
+    "image": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&h=300&fit=crop",
+    "audio": "data/podcast_sport.mp3",
+    "featured": false,
+    "keywords": ["спорт","футбол","хоккей","баскетбол","теннис","матч","чемпионат","олимпиада","гол","команда","игрок","трансфер","лига"]
+  },
+  {
+    "id": 4,
+    "title": "Политика: события и заявления",
+    "category": "Политика",
+    "date": "Сегодня",
+    "duration": "9:00",
+    "image": "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=400&h=300&fit=crop",
+    "audio": "data/podcast_politics.mp3",
+    "featured": false,
+    "keywords": ["политика","выборы","президент","правительство","закон","реформа","депутат","министр","санкции","мир","война"]
+  },
+  {
+    "id": 5,
+    "title": "Наука: открытия и исследования",
+    "category": "Наука",
+    "date": "Сегодня",
+    "duration": "11:00",
+    "image": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=300&fit=crop",
+    "audio": "data/podcast_science.mp3",
+    "featured": false,
+    "keywords": ["наука","космос","физика","биология","открытие","исследование","ученые","nasa","марс","ракета","медицина","днк","атом"]
+  },
+  {
+    "id": 6,
+    "title": "Культура: кино, музыка, искусство",
+    "category": "Культура",
+    "date": "Сегодня",
+    "duration": "10:00",
+    "image": "https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400&h=300&fit=crop",
+    "audio": "data/podcast_culture.mp3",
+    "featured": false,
+    "keywords": ["культура","кино","фильм","музыка","театр","выставка","искусство","концерт","премьера","актер","режиссер","оскар","книга"]
+  }
+]

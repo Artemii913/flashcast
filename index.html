@@ -57,7 +57,7 @@
     <div class="fullscreen-player" id="fullscreenPlayer"><div class="player-bg"></div><div class="player-header"><button class="player-header__btn" id="closePlayer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button><span class="player-header__title">Сейчас играет</span><button class="player-header__btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button></div><div class="player-content"><div class="player-cover"><img src="" alt="" class="player-cover__image" id="playerCoverImage"></div><div class="player-track-info"><h2 class="player-track-info__title" id="playerTrackTitle">—</h2><p class="player-track-info__category" id="playerTrackCategory">—</p></div><div class="player-progress"><div class="player-progress__bar" id="playerProgressBar"><div class="player-progress__fill" id="playerProgressFill"></div></div><div class="player-progress__time"><span id="playerCurrentTime">0:00</span><span id="playerTotalTime">0:00</span></div></div><div class="player-controls"><button class="player-controls__btn" id="btnPrev"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button><button class="player-controls__btn player-controls__btn--main" id="btnMainPlayPause"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button><button class="player-controls__btn" id="btnNext"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button></div><div class="player-actions"><button class="player-actions__btn" id="btnRepeat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button><button class="player-actions__btn" id="btnDownload"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div></div>
     <audio id="audioElement"></audio>
     <script>
-const podcastsData=[
+let podcastsData=[
 {id:0,title:"Все новости дня — полный дайджест",category:"Все новости",date:"Сегодня",duration:"25:00",image:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop",audio:"data/podcast_all.mp3",featured:true,keywords:["новости","дайджест","все","главное","сегодня","день","обзор"]},
 {id:1,title:"Технологии: AI, гаджеты и IT",category:"Технологии",date:"Сегодня",duration:"10:00",image:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",audio:"data/podcast_tech.mp3",keywords:["технологии","tech","it","гаджеты","apple","google","ai","искусственный интеллект","программирование","код","смартфон","компьютер","робот"]},
 {id:2,title:"Экономика: курсы, биржи, финансы",category:"Экономика",date:"Сегодня",duration:"8:00",image:"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",audio:"data/podcast_economy.mp3",keywords:["экономика","финансы","деньги","курс","валюта","доллар","евро","рубль","биржа","акции","инвестиции","бизнес","банк","кризис"]},
@@ -98,7 +98,17 @@ dom.audio.onended=()=>{if(state.isRepeat){dom.audio.currentTime=0;dom.audio.play
 dom.openAiChat.onclick=openChat;dom.closeAiChat.onclick=closeChat;dom.chatSend.onclick=submitChat;
 dom.chatInput.onkeypress=e=>{if(e.key==='Enter')submitChat();};
 document.onkeydown=e=>{if(e.key==='Escape'){if(dom.aiChat.classList.contains('active'))closeChat();else if(dom.fullscreenPlayer.classList.contains('active'))closeFull();}};
-dom.audio.volume=state.volume;render(podcastsData);
+dom.audio.volume=state.volume;
+fetch('data/podcasts.json')
+  .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+  .then(data=>{if(Array.isArray(data)&&data.length)podcastsData=data;render(podcastsData);})
+  .catch(()=>{
+    const notice=document.createElement('p');
+    notice.style.cssText='color:var(--text-secondary);font-size:0.85rem;margin-bottom:var(--spacing-md);';
+    notice.textContent='⚠️ Не удалось загрузить подкасты — показаны сохранённые данные';
+    dom.podcastsGrid.before(notice);
+    render(podcastsData);
+  });
     </script>
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

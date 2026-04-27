@@ -19,36 +19,40 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
-        run: pip install feedparser requests gtts
-      
+        run: pip install feedparser requests edge-tts
+
       - name: Parse news
         run: python scripts/rss_parser.py
-      
+
       - name: Generate audio files
         run: |
           python -c "
-          from gtts import gTTS
-          import os
-          
-          categories = ['news', 'tech', 'economy', 'politics', 'science', 'culture', 'sport']
-          
-          for cat in categories:
-              script_file = f'data/script_{cat}.txt'
-              if os.path.exists(script_file):
-                  print(f'🎙️ Generating {cat}...')
-                  text = open(script_file, 'r', encoding='utf-8').read()
-                  tts = gTTS(text, lang='ru')
-                  tts.save(f'data/podcast_{cat}.mp3')
-                  print(f'✅ Done: data/podcast_{cat}.mp3')
-              else:
-                  print(f'⚠️ Skip {cat}: no script')
-          
-          if os.path.exists('data/script.txt'):
-              print('🎙️ Generating ALL...')
-              text = open('data/script.txt', 'r', encoding='utf-8').read()
-              tts = gTTS(text, lang='ru')
-              tts.save('data/podcast_all.mp3')
-              print('✅ Done: data/podcast_all.mp3')
+          import asyncio, edge_tts, os
+
+          VOICE = 'ru-RU-DmitryNeural'
+
+          async def synthesize(text, out):
+              c = edge_tts.Communicate(text=text, voice=VOICE)
+              await c.save(out)
+
+          async def main():
+              categories = ['news', 'tech', 'economy', 'politics', 'science', 'culture', 'sport']
+              for cat in categories:
+                  src = f'data/script_{cat}.txt'
+                  if os.path.exists(src):
+                      print(f'Generating {cat}...')
+                      text = open(src, encoding='utf-8').read()
+                      await synthesize(text, f'data/podcast_{cat}.mp3')
+                      print(f'Done: data/podcast_{cat}.mp3')
+                  else:
+                      print(f'Skip {cat}: no script')
+              if os.path.exists('data/script.txt'):
+                  print('Generating ALL...')
+                  text = open('data/script.txt', encoding='utf-8').read()
+                  await synthesize(text, 'data/podcast_all.mp3')
+                  print('Done: data/podcast_all.mp3')
+
+          asyncio.run(main())
           "
       
       - name: List files

@@ -34,8 +34,20 @@
 
         <h2 class="section__title">Популярные выпуски</h2>
         <div class="filters" id="filters"><button class="filter-btn active" data-category="all">Все</button><button class="filter-btn" data-category="Технологии">Технологии</button><button class="filter-btn" data-category="Экономика">Экономика</button><button class="filter-btn" data-category="Спорт">Спорт</button><button class="filter-btn" data-category="Политика">Политика</button><button class="filter-btn" data-category="Наука">Наука</button><button class="filter-btn" data-category="Культура">Культура</button></div>
+        <div class="podcasts-counter" id="podcastsCounter"></div>
         <div class="podcasts-grid" id="podcastsGrid"></div>
         <div class="no-results" id="noResults"><div>📭</div><p>Нет подкастов</p></div>
+
+        <!-- ===== ИСТОЧНИКИ ===== -->
+        <section class="sources-section" id="sourcesSection">
+            <h2 class="section__title">Источники</h2>
+            <p class="sources-section__subtitle">Выбирай СМИ, которым доверяешь. Подкасты, у которых все источники отключены, скрываются.</p>
+            <div class="sources-section__topbar">
+                <button class="sources-enable-all" id="sourcesEnableAll">Включить все</button>
+            </div>
+            <div class="sources-groups" id="sourcesGroups"></div>
+        </section>
+        <!-- ===== /ИСТОЧНИКИ ===== -->
     </main>
 
     <div class="ai-chat" id="aiChat"><div class="ai-chat__header"><div class="ai-chat__header-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>AI Ассистент</div><button class="ai-chat__close" id="closeAiChat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="ai-chat__messages" id="chatMessages"><div class="ai-chat__message ai-chat__message--bot">Привет! 👋 Напиши тему — найду подкаст. Примеры: космос, футбол, кино, деньги, apple</div></div><div class="ai-chat__input-area"><input type="text" class="ai-chat__input" id="chatInput" placeholder="Тема..." autocomplete="off"><button class="ai-chat__send" id="chatSend"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>
@@ -55,9 +67,17 @@ let podcastsData=[
 const dom={podcastsGrid:document.getElementById('podcastsGrid'),noResults:document.getElementById('noResults'),filters:document.getElementById('filters'),miniPlayer:document.getElementById('miniPlayer'),miniPlayerCover:document.getElementById('miniPlayerCover'),miniPlayerTitle:document.getElementById('miniPlayerTitle'),miniPlayerCategory:document.getElementById('miniPlayerCategory'),miniPlayPause:document.getElementById('miniPlayPause'),miniProgressFill:document.getElementById('miniProgressFill'),fullscreenPlayer:document.getElementById('fullscreenPlayer'),closePlayer:document.getElementById('closePlayer'),playerCoverImage:document.getElementById('playerCoverImage'),playerTrackTitle:document.getElementById('playerTrackTitle'),playerTrackCategory:document.getElementById('playerTrackCategory'),playerProgressBar:document.getElementById('playerProgressBar'),playerProgressFill:document.getElementById('playerProgressFill'),playerCurrentTime:document.getElementById('playerCurrentTime'),playerTotalTime:document.getElementById('playerTotalTime'),btnPrev:document.getElementById('btnPrev'),btnNext:document.getElementById('btnNext'),btnMainPlayPause:document.getElementById('btnMainPlayPause'),btnRepeat:document.getElementById('btnRepeat'),btnDownload:document.getElementById('btnDownload'),audio:document.getElementById('audioElement'),aiChat:document.getElementById('aiChat'),openAiChat:document.getElementById('openAiChat'),closeAiChat:document.getElementById('closeAiChat'),chatMessages:document.getElementById('chatMessages'),chatInput:document.getElementById('chatInput'),chatSend:document.getElementById('chatSend')};
 let state={currentPodcast:null,currentIndex:-1,isPlaying:false,isRepeat:false,volume:0.8};
 function formatTime(s){if(isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
-function createCard(p){return'<article class="podcast-card '+(p.featured?'podcast-card--featured':'')+'" data-id="'+p.id+'"><div class="podcast-card__cover"><img src="'+p.image+'" alt="" class="podcast-card__image" loading="lazy" onerror="this.style.background=\'#1a1a25\'"><span class="podcast-card__tag">'+p.category+'</span><span class="podcast-card__duration">'+p.duration+'</span><div class="podcast-card__play"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div><div class="podcast-card__info"><h3 class="podcast-card__title">'+p.title+'</h3><div class="podcast-card__meta"><span>'+p.date+'</span></div></div></article>';}
+function createCard(p){return'<article class="podcast-card '+(p.featured?'podcast-card--featured':'')+'" data-id="'+p.id+'"><div class="podcast-card__cover"><img src="'+p.image+'" alt="" class="podcast-card__image" loading="lazy" onerror="this.style.background=\'#1a1a25\'"><span class="podcast-card__tag">'+p.category+'</span><span class="podcast-card__duration">'+p.duration+'</span><div class="podcast-card__play"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div><div class="podcast-card__info"><h3 class="podcast-card__title">'+p.title+'</h3><div class="podcast-card__meta"><span>'+p.date+'</span></div>'+(p.sources&&p.sources.length?'<span class="podcast-card__sources">Источники: '+p.sources.join(' · ')+'</span>':'')+'</div></article>';}
 function render(list){if(!list.length){dom.podcastsGrid.innerHTML='';dom.noResults.classList.add('visible');return;}dom.noResults.classList.remove('visible');dom.podcastsGrid.innerHTML=list.map(createCard).join('');document.querySelectorAll('.podcast-card').forEach(c=>c.addEventListener('click',()=>{const p=podcastsData.find(x=>x.id===+c.dataset.id);if(p){play(p);openFull();}}));}
-function filter(cat){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.category===cat));render(cat==='all'?podcastsData:podcastsData.filter(p=>p.category===cat));}
+const DISABLED_KEY='flashcast_disabled_sources';
+function getDisabled(){try{return new Set(JSON.parse(localStorage.getItem(DISABLED_KEY)||'[]'));}catch{return new Set();}}
+function saveDisabled(set){localStorage.setItem(DISABLED_KEY,JSON.stringify([...set]));}
+function isCardVisible(card){if(!card.sources||!card.sources.length)return true;const d=getDisabled();return card.sources.some(s=>!d.has(s));}
+function updateCounter(shown,total){const el=document.getElementById('podcastsCounter');if(!el)return;el.textContent=shown<total?'Показано '+shown+' из '+total:'';}
+function rerenderCurrent(){const btn=document.querySelector('.filter-btn.active');const cat=btn?btn.dataset.category:'all';const base=cat==='all'?podcastsData:podcastsData.filter(p=>p.category===cat);const visible=base.filter(isCardVisible);render(visible);updateCounter(visible.length,base.length);}
+function filter(cat){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.category===cat));const base=cat==='all'?podcastsData:podcastsData.filter(p=>p.category===cat);const visible=base.filter(isCardVisible);render(visible);updateCounter(visible.length,base.length);}
+function renderSources(data){const d=getDisabled();const container=document.getElementById('sourcesGroups');if(!container)return;let html='';for(const[cat,srcs]of Object.entries(data.categories)){html+='<div class="sources-group"><div class="sources-group__title">'+cat+'</div><div class="sources-group__list">';for(const s of srcs){const chk=d.has(s)?'':'checked';html+='<div class="source-row"><span class="source-row__name">'+s+'</span><label class="source-toggle"><input type="checkbox" '+chk+' data-source="'+s+'" onchange="onToggleSource(this)"><span class="source-toggle__slider"></span></label></div>';}html+='</div></div>';}container.innerHTML=html;}
+function onToggleSource(inp){const s=inp.dataset.source;const d=getDisabled();inp.checked?d.delete(s):d.add(s);saveDisabled(d);document.querySelectorAll('input[data-source="'+s+'"]').forEach(el=>{if(el!==inp)el.checked=inp.checked;});rerenderCurrent();}
 function play(p){state.currentPodcast=p;state.currentIndex=podcastsData.findIndex(x=>x.id===p.id);dom.miniPlayerCover.src=p.image;dom.miniPlayerTitle.textContent=p.title;dom.miniPlayerCategory.textContent=p.category;dom.playerCoverImage.src=p.image;dom.playerTrackTitle.textContent=p.title;dom.playerTrackCategory.textContent=p.category;dom.audio.src=p.audio;dom.audio.play().catch(()=>{});state.isPlaying=true;updateBtns();dom.miniPlayer.classList.add('active');}
 function toggle(){if(!state.currentPodcast)return;state.isPlaying?dom.audio.pause():dom.audio.play();state.isPlaying=!state.isPlaying;updateBtns();}
 function updateBtns(){document.querySelectorAll('.icon-play').forEach(i=>i.style.display=state.isPlaying?'none':'block');document.querySelectorAll('.icon-pause').forEach(i=>i.style.display=state.isPlaying?'block':'none');}
@@ -85,16 +105,21 @@ dom.openAiChat.onclick=openChat;dom.closeAiChat.onclick=closeChat;dom.chatSend.o
 dom.chatInput.onkeypress=e=>{if(e.key==='Enter')submitChat();};
 document.onkeydown=e=>{if(e.key==='Escape'){if(dom.aiChat.classList.contains('active'))closeChat();else if(dom.fullscreenPlayer.classList.contains('active'))closeFull();}};
 dom.audio.volume=state.volume;
+document.getElementById('sourcesEnableAll').onclick=()=>{saveDisabled(new Set());document.querySelectorAll('.source-toggle input').forEach(el=>{el.checked=true;});rerenderCurrent();};
 fetch('data/podcasts.json')
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
-  .then(data=>{if(Array.isArray(data)&&data.length)podcastsData=data;render(podcastsData);})
+  .then(data=>{if(Array.isArray(data)&&data.length)podcastsData=data;rerenderCurrent();})
   .catch(()=>{
     const notice=document.createElement('p');
     notice.style.cssText='color:var(--text-secondary);font-size:0.85rem;margin-bottom:var(--spacing-md);';
     notice.textContent='⚠️ Не удалось загрузить подкасты — показаны сохранённые данные';
     dom.podcastsGrid.before(notice);
-    render(podcastsData);
+    rerenderCurrent();
   });
+fetch('data/sources.json')
+  .then(r=>r.json())
+  .then(data=>renderSources(data))
+  .catch(()=>{});
     </script>
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

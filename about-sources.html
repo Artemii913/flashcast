@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>О наших источниках — FlashCast</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header__container">
+            <a href="index.html" class="logo">
+                <div class="logo__icon">🎙️</div>
+                <div class="logo__text">Flash<span>Cast</span></div>
+            </a>
+            <a href="index.html" class="about-back-link">← На главную</a>
+        </div>
+    </header>
+
+    <main class="main">
+        <h1 class="section__title">О наших источниках</h1>
+        <p class="about-page__subtitle">Мы агрегируем новости только с проверенных СМИ. Здесь — кто и почему попал в наш список.</p>
+        <div class="about-groups" id="aboutGroups"></div>
+        <div class="about-error" id="aboutError" style="display:none">Не удалось загрузить информацию об источниках</div>
+
+        <footer class="site-footer">
+            <div class="site-footer__container">
+                <span class="site-footer__copy">© 2026 FlashCast</span>
+                <div class="site-footer__links">
+                    <span class="site-footer__current">О наших источниках</span>
+                    <span class="site-footer__sep">·</span>
+                    <a href="https://clck.ru/3Smh9b" target="_blank" rel="noopener" class="site-footer__link">Обратная связь</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+function renderGroups(sources, info) {
+  let html = '';
+  for (const [cat, srcList] of Object.entries(sources.categories)) {
+    html += '<section class="about-group"><h2 class="about-group__title">' + cat + '</h2><div class="about-cards">';
+    for (const name of srcList) {
+      const d = info[name] || {};
+      const isTodo = d.TODO === true;
+      const year = isTodo ? '—' : (d.founded || '—');
+      const desc = isTodo ? 'Информация уточняется' : (d.description || 'Информация уточняется');
+      const specialty = d.specialty || '';
+      const url = d.url || '';
+      html += '<div class="about-source-card">'
+        + '<div class="about-source-card__header">'
+        + '<span class="about-source-card__name">' + name + '</span>'
+        + '<span class="about-source-card__year">' + year + '</span>'
+        + '</div>'
+        + (specialty ? '<div class="about-source-card__specialty">' + specialty + '</div>' : '')
+        + '<p class="about-source-card__desc">' + desc + '</p>'
+        + (url ? '<a href="' + url + '" target="_blank" rel="noopener" class="about-source-card__link">Перейти на сайт →</a>' : '')
+        + '</div>';
+    }
+    html += '</div></section>';
+  }
+  document.getElementById('aboutGroups').innerHTML = html;
+}
+
+Promise.all([
+  fetch('data/sources.json').then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+  fetch('data/sources-info.json').then(r => { if (!r.ok) throw new Error(); return r.json(); })
+]).then(([sources, info]) => {
+  renderGroups(sources, info);
+}).catch(() => {
+  document.getElementById('aboutGroups').style.display = 'none';
+  document.getElementById('aboutError').style.display = 'block';
+});
+    </script>
+</body>
+</html>

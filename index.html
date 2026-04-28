@@ -44,10 +44,24 @@
             <p class="sources-section__subtitle">Выбирай СМИ, которым доверяешь. Подкасты, у которых все источники отключены, скрываются.</p>
             <div class="sources-section__topbar">
                 <button class="sources-enable-all" id="sourcesEnableAll">Включить все</button>
+                <a href="about-sources.html" class="sources-about-link">Подробнее об источниках →</a>
             </div>
             <div class="sources-groups" id="sourcesGroups"></div>
         </section>
         <!-- ===== /ИСТОЧНИКИ ===== -->
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="site-footer">
+            <div class="site-footer__container">
+                <span class="site-footer__copy">© 2026 FlashCast</span>
+                <div class="site-footer__links">
+                    <a href="about-sources.html" class="site-footer__link">О наших источниках</a>
+                    <span class="site-footer__sep">·</span>
+                    <a href="https://clck.ru/3Smh9b" target="_blank" rel="noopener" class="site-footer__link">Обратная связь</a>
+                </div>
+            </div>
+        </footer>
+        <!-- ===== /FOOTER ===== -->
     </main>
 
     <div class="ai-chat" id="aiChat"><div class="ai-chat__header"><div class="ai-chat__header-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>AI Ассистент</div><button class="ai-chat__close" id="closeAiChat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="ai-chat__messages" id="chatMessages"><div class="ai-chat__message ai-chat__message--bot">Привет! 👋 Напиши тему — найду подкаст. Примеры: космос, футбол, кино, деньги, apple</div></div><div class="ai-chat__input-area"><input type="text" class="ai-chat__input" id="chatInput" placeholder="Тема..." autocomplete="off"><button class="ai-chat__send" id="chatSend"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>

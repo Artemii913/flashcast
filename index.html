@@ -10,47 +10,76 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header"><div class="header__container"><a href="#" class="logo"><div class="logo__icon">🎙️</div><div class="logo__text">Flash<span>Cast</span></div></a><button class="header__ai-btn" id="openAiChat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><span>AI Подкаст</span></button></div></header>
+    <header class="header"><div class="header__container"><a href="#" class="logo"><div class="logo__icon">🎙️</div><div class="logo__text">Flash<span>Cast</span></div></a><!-- TODO PR #10: review this button when Ассистент screen gets full AI upgrade --><button class="header__ai-btn" id="openAiChat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><span>AI Подкаст</span></button></div></header>
 
     <main class="main">
 
-        <!-- ===== QR-БАННЕР ===== -->
-        <div class="qr-banner">
-            <div class="qr-banner__qr">
-                <!-- Замените qr.png на имя вашего файла с QR-кодом -->
-                <img src="qr.png" alt="QR-код FlashCast">
+        <!-- ===== ПОТОК ===== -->
+        <section data-screen="flow" class="screen">
+            <div class="qr-banner">
+                <div class="qr-banner__qr"><img src="qr.png" alt="QR-код FlashCast"></div>
+                <div class="qr-banner__divider"></div>
+                <div class="qr-banner__text">
+                    <div class="qr-banner__title">Пожалуйста оставьте отзыв о посещении сайта</div>
+                    <div class="qr-banner__desc">Сканируйте QR-код камерой смартфона или перейдите по ссылке, чтобы открыть Google форму для отзыва</div>
+                    <a href="https://clck.ru/3Smh9b" target="_blank" class="qr-banner__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>clck.ru/3Smh9b</a>
+                </div>
             </div>
-            <div class="qr-banner__divider"></div>
-            <div class="qr-banner__text">
-                <div class="qr-banner__title">Пожалуйста оставьте отзыв о посещении сайта</div>
-                <div class="qr-banner__desc">Сканируйте QR-код камерой смартфона или перейдите по ссылке, чтобы открыть Google форму для отзыва</div>
-                <a href="https://clck.ru/3Smh9b" target="_blank" class="qr-banner__link">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    clck.ru/3Smh9b
-                </a>
-            </div>
-        </div>
-        <!-- ===== /QR-БАННЕР ===== -->
+            <h2 class="section__title">Популярные выпуски</h2>
+            <div class="filters" id="filters"><button class="filter-btn active" data-category="all">Все</button><button class="filter-btn" data-category="Технологии">Технологии</button><button class="filter-btn" data-category="Экономика">Экономика</button><button class="filter-btn" data-category="Спорт">Спорт</button><button class="filter-btn" data-category="Политика">Политика</button><button class="filter-btn" data-category="Наука">Наука</button><button class="filter-btn" data-category="Культура">Культура</button></div>
+            <div class="podcasts-counter" id="podcastsCounter"></div>
+            <div class="podcasts-grid" id="podcastsGrid"></div>
+            <div class="no-results" id="noResults"><div>📭</div><p>Нет подкастов</p></div>
+        </section>
+        <!-- ===== /ПОТОК ===== -->
 
-        <h2 class="section__title">Популярные выпуски</h2>
-        <div class="filters" id="filters"><button class="filter-btn active" data-category="all">Все</button><button class="filter-btn" data-category="Технологии">Технологии</button><button class="filter-btn" data-category="Экономика">Экономика</button><button class="filter-btn" data-category="Спорт">Спорт</button><button class="filter-btn" data-category="Политика">Политика</button><button class="filter-btn" data-category="Наука">Наука</button><button class="filter-btn" data-category="Культура">Культура</button></div>
-        <div class="podcasts-counter" id="podcastsCounter"></div>
-        <div class="podcasts-grid" id="podcastsGrid"></div>
-        <div class="no-results" id="noResults"><div>📭</div><p>Нет подкастов</p></div>
+        <!-- ===== КАТАЛОГ ===== -->
+        <section data-screen="catalog" class="screen">
+            <h2 class="section__title">Каталог</h2>
+            <div class="screen-placeholder">
+                <div class="screen-placeholder__icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+                <p class="screen-placeholder__text">Здесь будет поиск и фильтрация по типу контента. Появится в следующем обновлении.</p>
+            </div>
+        </section>
+        <!-- ===== /КАТАЛОГ ===== -->
+
+        <!-- ===== АССИСТЕНТ ===== -->
+        <section data-screen="assistant" class="screen">
+            <h2 class="section__title">Ассистент</h2>
+            <div class="screen-placeholder">
+                <div class="screen-placeholder__icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4L8.2 13.7 2 9.2h7.6z"/></svg></div>
+                <p class="screen-placeholder__text">Полноценный AI-ассистент скоро появится. Пока работает простая версия — поиск по ключевым словам в подкастах.</p>
+                <!-- TODO PR #10: replace with full Claude API assistant; review double entry-point with header button -->
+                <button class="assistant-open-btn" id="openChatFromAssistant">Открыть простой поиск</button>
+            </div>
+        </section>
+        <!-- ===== /АССИСТЕНТ ===== -->
 
         <!-- ===== ИСТОЧНИКИ ===== -->
-        <section class="sources-section" id="sourcesSection">
-            <h2 class="section__title">Источники</h2>
-            <p class="sources-section__subtitle">Выбирай СМИ, которым доверяешь. Подкасты, у которых все источники отключены, скрываются.</p>
-            <div class="sources-section__topbar">
-                <button class="sources-enable-all" id="sourcesEnableAll">Включить все</button>
-                <a href="about-sources.html" class="sources-about-link">Подробнее об источниках →</a>
-            </div>
-            <div class="sources-groups" id="sourcesGroups"></div>
+        <section data-screen="sources" class="screen">
+            <section class="sources-section" id="sourcesSection">
+                <h2 class="section__title">Источники</h2>
+                <p class="sources-section__subtitle">Выбирай СМИ, которым доверяешь. Подкасты, у которых все источники отключены, скрываются.</p>
+                <div class="sources-section__topbar">
+                    <button class="sources-enable-all" id="sourcesEnableAll">Включить все</button>
+                    <a href="about-sources.html" class="sources-about-link">Подробнее об источниках →</a>
+                </div>
+                <div class="sources-groups" id="sourcesGroups"></div>
+            </section>
         </section>
         <!-- ===== /ИСТОЧНИКИ ===== -->
 
-        <!-- ===== FOOTER ===== -->
+        <!-- ===== ПРОФИЛЬ ===== -->
+        <section data-screen="profile" class="screen">
+            <h2 class="section__title">Профиль</h2>
+            <div class="screen-placeholder">
+                <div class="screen-placeholder__icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+                <p class="screen-placeholder__text">Здесь будет твой профиль и статистика. Скоро добавим возможность сохранять прогресс.</p>
+            </div>
+        </section>
+        <!-- ===== /ПРОФИЛЬ ===== -->
+
+        <!-- ===== FOOTER (вне screen'ов, виден на всех экранах) ===== -->
         <footer class="site-footer">
             <div class="site-footer__container">
                 <span class="site-footer__copy">© 2026 FlashCast</span>
@@ -63,6 +92,31 @@
         </footer>
         <!-- ===== /FOOTER ===== -->
     </main>
+
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="bottom-nav__btn" data-screen="flow">
+            <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49"/><path d="M7.76 7.76a6 6 0 0 0 0 8.49"/><path d="M20.07 4.93a10 10 0 0 1 0 14.14"/><path d="M3.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            <span>Поток</span>
+        </button>
+        <button class="bottom-nav__btn" data-screen="catalog">
+            <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Каталог</span>
+        </button>
+        <button class="bottom-nav__btn" data-screen="assistant">
+            <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 17l-6.2 4L8.2 13.7 2 9.2h7.6z"/></svg>
+            <span>Ассистент</span>
+        </button>
+        <button class="bottom-nav__btn" data-screen="sources">
+            <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+            <span>Источники</span>
+        </button>
+        <button class="bottom-nav__btn" data-screen="profile">
+            <svg class="bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span>Профиль</span>
+        </button>
+    </nav>
+    <!-- ===== /НИЖНЯЯ НАВИГАЦИЯ ===== -->
 
     <div class="ai-chat" id="aiChat"><div class="ai-chat__header"><div class="ai-chat__header-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>AI Ассистент</div><button class="ai-chat__close" id="closeAiChat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="ai-chat__messages" id="chatMessages"><div class="ai-chat__message ai-chat__message--bot">Привет! 👋 Напиши тему — найду подкаст. Примеры: космос, футбол, кино, деньги, apple</div></div><div class="ai-chat__input-area"><input type="text" class="ai-chat__input" id="chatInput" placeholder="Тема..." autocomplete="off"><button class="ai-chat__send" id="chatSend"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>
     <div class="mini-player" id="miniPlayer"><div class="mini-player__progress"><div class="mini-player__progress-fill" id="miniProgressFill"></div></div><div class="mini-player__container"><div class="mini-player__track"><img src="" alt="" class="mini-player__cover" id="miniPlayerCover"><div class="mini-player__info"><div class="mini-player__title" id="miniPlayerTitle">—</div><div class="mini-player__category" id="miniPlayerCategory">—</div></div></div><button class="mini-player__btn mini-player__btn--main" id="miniPlayPause" onclick="event.stopPropagation()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button></div></div>
@@ -120,6 +174,11 @@ dom.chatInput.onkeypress=e=>{if(e.key==='Enter')submitChat();};
 document.onkeydown=e=>{if(e.key==='Escape'){if(dom.aiChat.classList.contains('active'))closeChat();else if(dom.fullscreenPlayer.classList.contains('active'))closeFull();}};
 dom.audio.volume=state.volume;
 document.getElementById('sourcesEnableAll').onclick=()=>{saveDisabled(new Set());document.querySelectorAll('.source-toggle input').forEach(el=>{el.checked=true;});rerenderCurrent();};
+// TODO PR #10: replace with full Claude API assistant; review double entry-point with header button
+document.getElementById('openChatFromAssistant').onclick=openChat;
+function switchScreen(name){document.querySelectorAll('section[data-screen]').forEach(s=>s.classList.toggle('screen--active',s.dataset.screen===name));document.querySelectorAll('.bottom-nav__btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));localStorage.setItem('flashcast_current_screen',name);window.scrollTo({top:0,behavior:'instant'});}
+document.getElementById('bottomNav').querySelectorAll('.bottom-nav__btn').forEach(btn=>btn.onclick=()=>switchScreen(btn.dataset.screen));
+switchScreen(localStorage.getItem('flashcast_current_screen')||'flow');
 fetch('data/podcasts.json')
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
   .then(data=>{if(Array.isArray(data)&&data.length)podcastsData=data;rerenderCurrent();})

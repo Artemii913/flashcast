@@ -73,9 +73,38 @@
         <!-- ===== ПРОФИЛЬ ===== -->
         <section data-screen="profile" class="screen">
             <h2 class="section__title">Профиль</h2>
-            <div class="screen-placeholder">
-                <div class="screen-placeholder__icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-                <p class="screen-placeholder__text">Здесь будет твой профиль и статистика. Скоро добавим возможность сохранять прогресс.</p>
+            <!-- Незалогиненный: формы Войти / Регистрация -->
+            <div class="profile-auth" id="profileAuth">
+                <div class="profile-tabs">
+                    <button class="profile-tab active" data-tab="login">Войти</button>
+                    <button class="profile-tab" data-tab="register">Регистрация</button>
+                </div>
+                <div class="profile-form-wrap" id="tabLogin">
+                    <input type="email"    class="profile-input" id="loginEmail"    placeholder="Email" autocomplete="email">
+                    <input type="password" class="profile-input" id="loginPassword" placeholder="Пароль" autocomplete="current-password">
+                    <div class="profile-form__error" id="loginError"></div>
+                    <button class="profile-submit-btn" id="loginSubmit">Войти</button>
+                </div>
+                <div class="profile-form-wrap" id="tabRegister" style="display:none">
+                    <input type="email"    class="profile-input" id="regEmail"     placeholder="Email" autocomplete="email">
+                    <input type="text"     class="profile-input" id="regNickname"  placeholder="Ник (3–20 символов, буквы / цифры / _)" autocomplete="username">
+                    <input type="password" class="profile-input" id="regPassword"  placeholder="Пароль (мин. 6 символов)" autocomplete="new-password">
+                    <div class="profile-form__error"   id="regError"></div>
+                    <div class="profile-form__success" id="regSuccess"></div>
+                    <button class="profile-submit-btn" id="regSubmit">Создать аккаунт</button>
+                </div>
+            </div>
+            <!-- Залогиненный: аватар, ник, статистика -->
+            <div class="profile-user" id="profileUser" style="display:none">
+                <div class="profile-avatar" id="profileAvatar">?</div>
+                <div class="profile-nickname" id="profileNickname">—</div>
+                <div class="profile-badge">Free</div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><span class="profile-stat__value" id="statHours">0.0</span><span class="profile-stat__label">прослушано</span></div>
+                    <div class="profile-stat"><span class="profile-stat__value" id="statEpisodes">0</span><span class="profile-stat__label">выпусков</span></div>
+                    <div class="profile-stat"><span class="profile-stat__value" id="statSources">23</span><span class="profile-stat__label">источников</span></div>
+                </div>
+                <button class="profile-signout-btn" id="profileSignOut">Выйти</button>
             </div>
         </section>
         <!-- ===== /ПРОФИЛЬ ===== -->
@@ -123,6 +152,7 @@
     <div class="mini-player" id="miniPlayer"><div class="mini-player__progress"><div class="mini-player__progress-fill" id="miniProgressFill"></div></div><div class="mini-player__container"><div class="mini-player__track"><img src="" alt="" class="mini-player__cover" id="miniPlayerCover"><div class="mini-player__info"><div class="mini-player__title" id="miniPlayerTitle">—</div><div class="mini-player__category" id="miniPlayerCategory">—</div></div></div><button class="mini-player__btn mini-player__btn--main" id="miniPlayPause" onclick="event.stopPropagation()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button></div></div>
     <div class="fullscreen-player" id="fullscreenPlayer"><div class="player-bg"></div><div class="player-header"><button class="player-header__btn" id="closePlayer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button><span class="player-header__title">Сейчас играет</span><button class="player-header__btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button></div><div class="player-content"><div class="player-cover"><img src="" alt="" class="player-cover__image" id="playerCoverImage"></div><div class="player-track-info"><h2 class="player-track-info__title" id="playerTrackTitle">—</h2><p class="player-track-info__category" id="playerTrackCategory">—</p></div><div class="player-progress"><div class="player-progress__bar" id="playerProgressBar"><div class="player-progress__fill" id="playerProgressFill"></div></div><div class="player-progress__time"><span id="playerCurrentTime">0:00</span><span id="playerTotalTime">0:00</span></div></div><div class="player-controls"><button class="player-controls__btn" id="btnPrev"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button><button class="player-controls__btn player-controls__btn--main" id="btnMainPlayPause"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-play"><polygon points="5,3 19,12 5,21"/></svg><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></button><button class="player-controls__btn" id="btnNext"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button></div><div class="player-actions"><button class="player-actions__btn" id="btnRepeat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button><button class="player-actions__btn" id="btnDownload"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div></div>
     <audio id="audioElement"></audio>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script>
 let podcastsData=[
 {id:0,title:"Все новости дня — полный дайджест",category:"Все новости",date:"Сегодня",duration:"25:00",image:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop",audio:"data/podcast_all.mp3",featured:true,keywords:["новости","дайджест","все","главное","сегодня","день","обзор"]},
@@ -176,10 +206,15 @@ dom.miniPlayer.onclick=openFull;dom.miniPlayPause.onclick=e=>{e.stopPropagation(
 dom.closePlayer.onclick=closeFull;dom.btnMainPlayPause.onclick=toggle;dom.btnPrev.onclick=prev;dom.btnNext.onclick=next;
 dom.btnRepeat.onclick=()=>{state.isRepeat=!state.isRepeat;dom.btnRepeat.classList.toggle('active',state.isRepeat);};
 dom.btnDownload.onclick=()=>{if(state.currentPodcast){const a=document.createElement('a');a.href=state.currentPodcast.audio;a.download=state.currentPodcast.title+'.mp3';a.click();}};
-dom.audio.ontimeupdate=()=>{const p=(dom.audio.currentTime/dom.audio.duration)*100||0;dom.playerProgressFill.style.width=p+'%';dom.miniProgressFill.style.width=p+'%';dom.playerCurrentTime.textContent=formatTime(dom.audio.currentTime);const ff=document.getElementById('flowProgressFill');const ft=document.getElementById('flowCurrentTime');if(ff)ff.style.width=p+'%';if(ft)ft.textContent=formatTime(dom.audio.currentTime);};
+let _statsLastTick=0,_statsSecBuf=0,_statsSaveTime=0;
+let _currentNick=null,_authSub=null,_currentUser=null,_sbSession=null,_sbStats={seconds:0,episodes:0};
+async function _flushStats(extraEpisodes=0){if(!_currentUser){_statsSecBuf=0;return;}if(_statsSecBuf<=0&&extraEpisodes===0)return;const buf=_statsSecBuf;_statsSecBuf=0;const ns=_sbStats.seconds+buf;const ne=_sbStats.episodes+extraEpisodes;const{error}=await _sb.from('profiles').update({stats_seconds:ns,stats_episodes:ne}).eq('id',_currentUser.id);if(!error){_sbStats.seconds=ns;_sbStats.episodes=ne;}else{_statsSecBuf+=buf;}if(typeof updateStatsUI==='function')updateStatsUI();}
+dom.audio.ontimeupdate=()=>{const p=(dom.audio.currentTime/dom.audio.duration)*100||0;dom.playerProgressFill.style.width=p+'%';dom.miniProgressFill.style.width=p+'%';dom.playerCurrentTime.textContent=formatTime(dom.audio.currentTime);const ff=document.getElementById('flowProgressFill');const ft=document.getElementById('flowCurrentTime');if(ff)ff.style.width=p+'%';if(ft)ft.textContent=formatTime(dom.audio.currentTime);if(state.isPlaying){const now=Date.now();if(_statsLastTick>0){const el=(now-_statsLastTick)/1000;if(el<2){_statsSecBuf+=el;if(now-_statsSaveTime>30000){_statsSaveTime=now;_flushStats();}}}_statsLastTick=now;}else _statsLastTick=0;};
 dom.audio.onloadedmetadata=()=>{dom.playerTotalTime.textContent=formatTime(dom.audio.duration);const ft=document.getElementById('flowTotalTime');if(ft)ft.textContent=formatTime(dom.audio.duration);};
 dom.playerProgressBar.onclick=e=>{const r=dom.playerProgressBar.getBoundingClientRect();dom.audio.currentTime=((e.clientX-r.left)/r.width)*dom.audio.duration;};
-dom.audio.onended=()=>{if(state.isRepeat){dom.audio.currentTime=0;dom.audio.play();}else next();};
+dom.audio.onended=()=>{if(state.isRepeat){dom.audio.currentTime=0;dom.audio.play();}else{_flushStats(1);next();}};
+dom.audio.onpause=()=>{_flushStats();};
+window.addEventListener('beforeunload',()=>{if(!_currentUser||_statsSecBuf<=0)return;const token=_sbSession?.access_token;if(!token)return;fetch('https://foyvkmdeoydksoqdhnnz.supabase.co/rest/v1/profiles?id=eq.'+_currentUser.id,{method:'PATCH',keepalive:true,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,'apikey':'sb_publishable_Ge59zA1Ros_7dwCA13zGTw_JnFw2JX3'},body:JSON.stringify({stats_seconds:_sbStats.seconds+_statsSecBuf})});});
 dom.openAiChat.onclick=openChat;dom.closeAiChat.onclick=closeChat;dom.chatSend.onclick=submitChat;
 dom.chatInput.onkeypress=e=>{if(e.key==='Enter')submitChat();};
 document.onkeydown=e=>{if(e.key==='Escape'){if(dom.aiChat.classList.contains('active'))closeChat();else if(dom.fullscreenPlayer.classList.contains('active'))closeFull();}};
@@ -193,7 +228,7 @@ document.getElementById('flowBtnNext').onclick=next;
 document.getElementById('flowClearQueue').onclick=clearQueue;
 document.getElementById('flowProgressBar').onclick=e=>{if(!dom.audio.duration)return;const r=document.getElementById('flowProgressBar').getBoundingClientRect();dom.audio.currentTime=((e.clientX-r.left)/r.width)*dom.audio.duration;};
 document.getElementById('flowNowPlaying').addEventListener('click',e=>{if(!e.target.closest('.flow-controls')&&!e.target.closest('.flow-progress'))openFull();});
-function switchScreen(name){document.querySelectorAll('section[data-screen]').forEach(s=>s.classList.toggle('screen--active',s.dataset.screen===name));document.querySelectorAll('.bottom-nav__btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));localStorage.setItem('flashcast_current_screen',name);window.scrollTo({top:0,behavior:'instant'});}
+function switchScreen(name){document.querySelectorAll('section[data-screen]').forEach(s=>s.classList.toggle('screen--active',s.dataset.screen===name));document.querySelectorAll('.bottom-nav__btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));localStorage.setItem('flashcast_current_screen',name);window.scrollTo({top:0,behavior:'instant'});if(name==='profile'&&typeof updateStatsUI==='function')updateStatsUI();}
 document.getElementById('bottomNav').querySelectorAll('.bottom-nav__btn').forEach(btn=>btn.onclick=()=>switchScreen(btn.dataset.screen));
 switchScreen(localStorage.getItem('flashcast_current_screen')||'flow');
 (()=>{const q=getQueue();if(q.length>0&&state.queueIndex<0)state.queueIndex=0;renderFlowScreen();})();
@@ -211,6 +246,63 @@ fetch('data/sources.json')
   .then(r=>r.json())
   .then(data=>renderSources(data))
   .catch(()=>{});
+// ===== SUPABASE AUTH + PROFILE =====
+const _sb=supabase.createClient('https://foyvkmdeoydksoqdhnnz.supabase.co','sb_publishable_Ge59zA1Ros_7dwCA13zGTw_JnFw2JX3');
+function updateStatsUI(){const secs=_sbStats.seconds+_statsSecBuf;const h=document.getElementById('statHours');if(h)h.textContent=secs<60?'0 мин':secs<3600?Math.round(secs/60)+' мин':(secs/3600).toFixed(1)+' ч';const e=document.getElementById('statEpisodes');if(e)e.textContent=_sbStats.episodes;const s=document.getElementById('statSources');if(s)s.textContent=23-getDisabled().size;}
+function renderProfile(user,nickname){const auth=document.getElementById('profileAuth');const uv=document.getElementById('profileUser');if(!auth||!uv)return;if(!user){auth.style.display='';uv.style.display='none';return;}auth.style.display='none';uv.style.display='';const nick=nickname||(user.email.split('@')[0]);document.getElementById('profileNickname').textContent=nick;document.getElementById('profileAvatar').textContent=nick[0].toUpperCase();updateStatsUI();const soBtn=document.getElementById('profileSignOut');if(soBtn)soBtn.onclick=async()=>{console.log('[logout] click');const result=await _sb.auth.signOut();console.log('[logout] signOut result',result);};}
+// Tab switching
+document.querySelectorAll('.profile-tab').forEach(tab=>{tab.onclick=()=>{document.querySelectorAll('.profile-tab').forEach(t=>t.classList.toggle('active',t===tab));document.getElementById('tabLogin').style.display=tab.dataset.tab==='login'?'':'none';document.getElementById('tabRegister').style.display=tab.dataset.tab==='register'?'':'none';};});
+// Login
+document.getElementById('loginSubmit').onclick=async()=>{const email=document.getElementById('loginEmail').value.trim();const password=document.getElementById('loginPassword').value;const errEl=document.getElementById('loginError');errEl.textContent='';document.getElementById('loginSubmit').disabled=true;const{error}=await _sb.auth.signInWithPassword({email,password});document.getElementById('loginSubmit').disabled=false;if(error)errEl.textContent=error.message.includes('Invalid')?'Неверный email или пароль':error.message;};
+// Register — Bug 1 fix: retry nickname UPDATE until trigger creates the profile row
+document.getElementById('regSubmit').onclick=async()=>{
+  const email=document.getElementById('regEmail').value.trim();
+  const nick=document.getElementById('regNickname').value.trim();
+  const password=document.getElementById('regPassword').value;
+  const errEl=document.getElementById('regError');
+  const okEl=document.getElementById('regSuccess');
+  errEl.textContent='';okEl.textContent='';
+  if(!/^[a-zA-Zа-яА-Я0-9_]{3,20}$/.test(nick)){errEl.textContent='Ник: 3–20 символов, только буквы, цифры, _';return;}
+  if(password.length<6){errEl.textContent='Пароль: минимум 6 символов';return;}
+  document.getElementById('regSubmit').disabled=true;
+  const{data:ex}=await _sb.from('profiles').select('id').eq('nickname',nick).maybeSingle();
+  if(ex){errEl.textContent='Ник уже занят';document.getElementById('regSubmit').disabled=false;return;}
+  const{data,error}=await _sb.auth.signUp({email,password});
+  if(error){errEl.textContent=error.message;document.getElementById('regSubmit').disabled=false;return;}
+  if(data.user){
+    let attempts=0;
+    const tryNick=async()=>{
+      attempts++;
+      const{error:e}=await _sb.from('profiles').update({nickname:nick}).eq('id',data.user.id);
+      if(e){console.error('[nick update] attempt',attempts,e);if(e.code==='23505'){errEl.textContent='Ник занят, попробуй другой';}else if(attempts<6){setTimeout(tryNick,500);}}
+      else{_currentNick=nick;}
+    };
+    setTimeout(tryNick,400);
+  }
+  okEl.textContent=data.session?'Аккаунт создан! Добро пожаловать.':'Аккаунт создан! Проверь email и подтверди адрес.';
+  document.getElementById('regSubmit').disabled=false;
+};
+// Prevent duplicate listeners (e.g. hot-reload)
+if(_authSub)_authSub.data.subscription.unsubscribe();
+_authSub=_sb.auth.onAuthStateChange(async(event,session)=>{
+  _sbSession=session;_currentUser=session?.user||null;
+  if(!session?.user){_currentNick=null;_sbStats={seconds:0,episodes:0};renderProfile(null,null);return;}
+  renderProfile(session.user,_currentNick);
+  const pending=sessionStorage.getItem('flashcast_pending_nick');
+  if(pending){
+    sessionStorage.removeItem('flashcast_pending_nick');
+    const{error:e}=await _sb.from('profiles').update({nickname:pending}).eq('id',session.user.id);
+    if(!e)_currentNick=pending;
+    else if(e.code!=='23505')console.error('[pending nick]',e);
+  }
+  if(!_currentNick||event==='SIGNED_IN'){
+    const{data:prof}=await _sb.from('profiles').select('nickname,stats_seconds,stats_episodes').eq('id',session.user.id).maybeSingle();
+    _currentNick=prof?.nickname||null;
+    _sbStats.seconds=parseFloat(prof?.stats_seconds||0);
+    _sbStats.episodes=parseInt(prof?.stats_episodes||0);
+  }
+  renderProfile(session.user,_currentNick);
+});
     </script>
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

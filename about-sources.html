@@ -39,6 +39,7 @@
     </main>
 
     <script>
+(()=>{const t=localStorage.getItem('flashcast_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
 function renderGroups(sources, info) {
   let html = '';
   for (const [cat, srcList] of Object.entries(sources.categories)) {

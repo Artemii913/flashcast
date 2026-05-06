@@ -74,6 +74,16 @@
         <!-- ===== ПРОФИЛЬ ===== -->
         <section data-screen="profile" class="screen">
             <h2 class="section__title">Профиль</h2>
+            <div class="profile-settings">
+                <div class="profile-settings__title">Настройки</div>
+                <div class="source-row">
+                    <span class="source-row__name">Светлая тема</span>
+                    <label class="source-toggle">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="source-toggle__slider"></span>
+                    </label>
+                </div>
+            </div>
             <!-- Незалогиненный: формы Войти / Регистрация -->
             <div class="profile-auth" id="profileAuth">
                 <div class="profile-tabs">
@@ -155,6 +165,7 @@
     <audio id="audioElement"></audio>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script>
+(()=>{const t=localStorage.getItem('flashcast_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
 let podcastsData=[
 {id:0,title:"Все новости дня — полный дайджест",category:"Все новости",date:"Сегодня",duration:"25:00",image:"https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop",audio:"data/podcast_all.mp3",featured:true,keywords:["новости","дайджест","все","главное","сегодня","день","обзор"]},
 {id:1,title:"Технологии: AI, гаджеты и IT",category:"Технологии",date:"Сегодня",duration:"10:00",image:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",audio:"data/podcast_tech.mp3",keywords:["технологии","tech","it","гаджеты","apple","google","ai","искусственный интеллект","программирование","код","смартфон","компьютер","робот"]},
@@ -305,6 +316,7 @@ _authSub=_sb.auth.onAuthStateChange(async(event,session)=>{
   }
   renderProfile(session.user,_currentNick);
 });
+    (()=>{const t=document.getElementById('themeToggle');if(!t)return;t.checked=document.documentElement.getAttribute('data-theme')==='light';t.onchange=()=>{const n=t.checked?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('flashcast_theme',n);};})();
     </script>
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

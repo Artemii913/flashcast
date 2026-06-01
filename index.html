@@ -294,7 +294,7 @@ document.getElementById('regSubmit').onclick=async()=>{
   document.getElementById('regSubmit').disabled=true;
   const{data:ex}=await _sb.from('profiles').select('id').eq('nickname',nick).maybeSingle();
   if(ex){errEl.textContent='Ник уже занят';document.getElementById('regSubmit').disabled=false;return;}
-  const{data,error}=await _sb.auth.signUp({email,password});
+  const{data,error}=await _sb.auth.signUp({email,password,options:{emailRedirectTo:'https://artemii913.github.io/flashcast/',data:{nickname:nick}}});
   console.log('[signUp] result: user=',data?.user?.id,'session=',!!data?.session,'email_confirmed_at=',data?.user?.email_confirmed_at||null);
   if(error){errEl.textContent=error.message;document.getElementById('regSubmit').disabled=false;return;}
   if(data.user&&!data.session){

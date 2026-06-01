@@ -260,9 +260,23 @@ fetch('data/sources.json')
   .then(data=>renderSources(data))
   .catch(()=>{});
 // ===== SUPABASE AUTH + PROFILE =====
-const _sb=supabase.createClient('https://foyvkmdeoydksoqdhnnz.supabase.co','sb_publishable_Ge59zA1Ros_7dwCA13zGTw_JnFw2JX3');
+console.log('[init] script loaded');
+const _sb=supabase.createClient('https://foyvkmdeoydksoqdhnnz.supabase.co','sb_publishable_Ge59zA1Ros_7dwCA13zGTw_JnFw2JX3',{auth:{detectSessionInUrl:true}});
+console.log('[init] supabase client created', !!_sb);
+async function handleLogout(){
+  console.log('[logout] click');
+  try{
+    await Promise.race([
+      _sb.auth.signOut(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('signOut timeout')),3000))
+    ]);
+    console.log('[logout] signOut OK');
+  }catch(err){console.warn('[logout] signOut failed:',err);}
+  Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
 function updateStatsUI(){const secs=_sbStats.seconds+_statsSecBuf;const h=document.getElementById('statHours');if(h)h.textContent=secs<60?'0 мин':secs<3600?Math.round(secs/60)+' мин':(secs/3600).toFixed(1)+' ч';const e=document.getElementById('statEpisodes');if(e)e.textContent=_sbStats.episodes;const s=document.getElementById('statSources');if(s)s.textContent=23-getDisabled().size;}
-function renderProfile(user,nickname){const auth=document.getElementById('profileAuth');const uv=document.getElementById('profileUser');if(!auth||!uv)return;if(!user){auth.style.display='';uv.style.display='none';return;}auth.style.display='none';uv.style.display='';const nick=nickname||(user.email.split('@')[0]);document.getElementById('profileNickname').textContent=nick;document.getElementById('profileAvatar').textContent=nick[0].toUpperCase();updateStatsUI();const soBtn=document.getElementById('profileSignOut');if(soBtn)soBtn.onclick=async()=>{console.log('[logout] click');const result=await _sb.auth.signOut();console.log('[logout] signOut result',result);};}
+function renderProfile(user,nickname){const auth=document.getElementById('profileAuth');const uv=document.getElementById('profileUser');if(!auth||!uv)return;if(!user){auth.style.display='';uv.style.display='none';return;}auth.style.display='none';uv.style.display='';const nick=nickname||(user.email?.split('@')[0])||'Пользователь';document.getElementById('profileNickname').textContent=nick;document.getElementById('profileAvatar').textContent=nick.charAt(0).toUpperCase();updateStatsUI();const soBtn=document.getElementById('profileSignOut');if(soBtn)soBtn.onclick=handleLogout;}
 // Tab switching
 document.querySelectorAll('.profile-tab').forEach(tab=>{tab.onclick=()=>{document.querySelectorAll('.profile-tab').forEach(t=>t.classList.toggle('active',t===tab));document.getElementById('tabLogin').style.display=tab.dataset.tab==='login'?'':'none';document.getElementById('tabRegister').style.display=tab.dataset.tab==='register'?'':'none';};});
 // Login
@@ -281,40 +295,93 @@ document.getElementById('regSubmit').onclick=async()=>{
   const{data:ex}=await _sb.from('profiles').select('id').eq('nickname',nick).maybeSingle();
   if(ex){errEl.textContent='Ник уже занят';document.getElementById('regSubmit').disabled=false;return;}
   const{data,error}=await _sb.auth.signUp({email,password});
+  console.log('[signUp] result: user=',data?.user?.id,'session=',!!data?.session,'email_confirmed_at=',data?.user?.email_confirmed_at||null);
   if(error){errEl.textContent=error.message;document.getElementById('regSubmit').disabled=false;return;}
-  if(data.user){
+  if(data.user&&!data.session){
+    // Email confirmation required — no session yet
+    console.log('[signUp] confirmation email sent to',email,'saving pending nick:',nick);
+    localStorage.setItem('flashcast_pending_nick_'+data.user.id,nick);
+    okEl.textContent='Мы отправили письмо на '+email+'. Кликни по ссылке, чтобы подтвердить регистрацию.';
+  }else if(data.user&&data.session){
+    // Email confirmation disabled — immediate session
+    console.log('[signUp] immediate session, applying nick');
     let attempts=0;
     const tryNick=async()=>{
       attempts++;
-      const{error:e}=await _sb.from('profiles').update({nickname:nick}).eq('id',data.user.id);
-      if(e){console.error('[nick update] attempt',attempts,e);if(e.code==='23505'){errEl.textContent='Ник занят, попробуй другой';}else if(attempts<6){setTimeout(tryNick,500);}}
-      else{_currentNick=nick;}
+      const{error:e}=await _sb.from('profiles').upsert(
+        {id:data.user.id,nickname:nick,stats_seconds:0,stats_episodes:0},
+        {onConflict:'id'}
+      );
+      if(e){console.error('[nick upsert] attempt',attempts,e);if(e.code==='23505'){errEl.textContent='Ник занят, попробуй другой';}else if(attempts<6){setTimeout(tryNick,500);}}
+      else{_currentNick=nick;console.log('[nick upsert] success');}
     };
     setTimeout(tryNick,400);
+    okEl.textContent='Аккаунт создан! Добро пожаловать.';
   }
-  okEl.textContent=data.session?'Аккаунт создан! Добро пожаловать.':'Аккаунт создан! Проверь email и подтверди адрес.';
   document.getElementById('regSubmit').disabled=false;
 };
+async function loadProfileAndRender(user){
+  console.log('[loadProfile] start, user.id=',user.id,'email_confirmed_at=',user.email_confirmed_at||null);
+  if(!user.email_confirmed_at){
+    console.log('[loadProfile] email not confirmed — showing check-email hint');
+    const auth=document.getElementById('profileAuth');
+    const okEl=document.getElementById('regSuccess');
+    if(auth)auth.style.display='';
+    if(okEl)okEl.textContent='Проверьте почту и кликните по ссылке для подтверждения регистрации.';
+    renderProfile(null,null);
+    return;
+  }
+  try{
+    console.log('[loadProfile] before fetch');
+    const{data:prof,error:fetchErr}=await _sb.from('profiles').select('nickname,stats_seconds,stats_episodes').eq('id',user.id).maybeSingle();
+    console.log('[loadProfile] fetch result: prof=',prof,'error=',fetchErr);
+    if(prof){
+      _currentNick=prof.nickname||null;
+      _sbStats.seconds=parseFloat(prof.stats_seconds||0);
+      _sbStats.episodes=parseInt(prof.stats_episodes||0);
+    }else{
+      _sbStats={seconds:0,episodes:0};
+      const{error:ue}=await _sb.from('profiles').upsert(
+        {id:user.id,stats_seconds:0,stats_episodes:0},
+        {onConflict:'id',ignoreDuplicates:true}
+      );
+      if(ue)console.warn('[profile create]',ue.message);
+    }
+    // Apply pending nickname saved before email confirmation
+    const pendingKey='flashcast_pending_nick_'+user.id;
+    const pendingNick=localStorage.getItem(pendingKey);
+    if(pendingNick&&!_currentNick){
+      console.log('[loadProfile] pending nick found:',pendingNick,'— applying');
+      const{error:ne}=await _sb.from('profiles').upsert(
+        {id:user.id,nickname:pendingNick,stats_seconds:_sbStats.seconds,stats_episodes:_sbStats.episodes},
+        {onConflict:'id'}
+      );
+      if(ne){console.error('[loadProfile] pending nick upsert failed:',ne);}
+      else{_currentNick=pendingNick;console.log('[loadProfile] pending nick applied and cleared');}
+      localStorage.removeItem(pendingKey);
+    }else if(pendingNick&&_currentNick){
+      // Nick already set (trigger fired), just clear the pending key
+      console.log('[loadProfile] pending nick exists but profile already has nick — clearing');
+      localStorage.removeItem(pendingKey);
+    }
+  }catch(err){console.error('[loadProfile] caught error:',err);}
+  console.log('[loadProfile] done, _currentNick=',_currentNick);
+  renderProfile(user,_currentNick);
+}
 // Prevent duplicate listeners (e.g. hot-reload)
+console.log('[init] registering onAuthStateChange, _authSub exists?', !!_authSub);
 if(_authSub)_authSub.data.subscription.unsubscribe();
 _authSub=_sb.auth.onAuthStateChange(async(event,session)=>{
+  console.log('[auth-event]', event, session?.user?.email||'no user','email_confirmed_at=',session?.user?.email_confirmed_at||null);
   _sbSession=session;_currentUser=session?.user||null;
   if(!session?.user){_currentNick=null;_sbStats={seconds:0,episodes:0};renderProfile(null,null);return;}
   renderProfile(session.user,_currentNick);
-  const pending=sessionStorage.getItem('flashcast_pending_nick');
-  if(pending){
-    sessionStorage.removeItem('flashcast_pending_nick');
-    const{error:e}=await _sb.from('profiles').update({nickname:pending}).eq('id',session.user.id);
-    if(!e)_currentNick=pending;
-    else if(e.code!=='23505')console.error('[pending nick]',e);
+  if(event==='SIGNED_IN'||event==='INITIAL_SESSION'){
+    await loadProfileAndRender(session.user);
   }
-  if(!_currentNick||event==='SIGNED_IN'){
-    const{data:prof}=await _sb.from('profiles').select('nickname,stats_seconds,stats_episodes').eq('id',session.user.id).maybeSingle();
-    _currentNick=prof?.nickname||null;
-    _sbStats.seconds=parseFloat(prof?.stats_seconds||0);
-    _sbStats.episodes=parseInt(prof?.stats_episodes||0);
-  }
-  renderProfile(session.user,_currentNick);
+});
+_sb.auth.getSession().then(({data,error})=>{
+  console.log('[init] getSession:', data?.session?.user?.email||'no session', error?('err:'+error.message):'no error');
 });
     (()=>{const t=document.getElementById('themeToggle');if(!t)return;t.checked=document.documentElement.getAttribute('data-theme')==='light';t.onchange=()=>{const n=t.checked?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('flashcast_theme',n);};})();
     </script>

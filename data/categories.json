@@ -1,11 +1,11 @@
 {
   "news": {
     "name": "Новости",
-    "news_count": 8
+    "news_count": 6
   },
   "tech": {
     "name": "Технологии",
-    "news_count": 6
+    "news_count": 8
   },
   "economy": {
     "name": "Экономика",
@@ -13,7 +13,7 @@
   },
   "politics": {
     "name": "Политика",
-    "news_count": 5
+    "news_count": 4
   },
   "science": {
     "name": "Наука",

@@ -13,11 +13,11 @@
   },
   "politics": {
     "name": "Политика",
-    "news_count": 6
+    "news_count": 5
   },
   "science": {
     "name": "Наука",
-    "news_count": 8
+    "news_count": 6
   },
   "culture": {
     "name": "Культура",
@@ -25,6 +25,6 @@
   },
   "sport": {
     "name": "Спорт",
-    "news_count": 12
+    "news_count": 8
   }
 }

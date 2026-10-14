@@ -17,11 +17,11 @@
   },
   "science": {
     "name": "Наука",
-    "news_count": 8
+    "news_count": 9
   },
   "culture": {
     "name": "Культура",
-    "news_count": 10
+    "news_count": 8
   },
   "sport": {
     "name": "Спорт",
